@@ -1,0 +1,92 @@
+||bannerAB||
+============================================================================= 
+====  ======      =====     ===    ==    =======      ===========  ==  ======
+===    ====  ====  ===  ===  ===  ====  ========  ===  ==========  ==  ======
+==  ==  ===  ====  ==  =========  ====  ========  ====  =========  ==  ======
+=  ====  ===  =======  =========  ====  ========  ===  ====   ===  ==  ======
+=  ====  =====  =====  =========  ====  ========      ====  =  ==  ==  ======
+=        =======  ===  =========  ====  ========  ===  ======  ==  ==  ======
+=  ====  ==  ====  ==  =========  ====  ========  ====  ===    ==  ==  ======
+=  ====  ==  ====  ===  ===  ===  ====  ========  ===  ===  =  ==  ==  ======
+=  ====  ===      =====     ===    ==    =======      =====    ==  ==  ======
+=============================================================================
+|stop|
+
+||goodbye||
+______________________________________________________
+      __                                            / 
+    /    )                   /   /                 /  
+---/---------__----__----__-/---/__----------__---/---
+  /  --,   /   ) /   ) /   /   /   ) /   / /___) /    
+_(____/___(___/_(___/_(___/___(___/_(___/_(___ _o_____
+                                       /              
+                                   (_ /      
+
+
+
+
+                                   
+|stop|
+
+||help||
+========================================
+=  ====  ==        ==  ========       ==
+=  ====  ==  ========  ========  ====  =
+=  ====  ==  ========  ========  ====  =
+=  ====  ==  ========  ========  ====  =
+=        ==      ====  ========       ==
+=  ====  ==  ========  ========  =======
+=  ====  ==  ========  ========  =======
+=  ====  ==  ========  ========  =======
+=  ====  ==        ==        ==  =======
+========================================
+|stop|
+
+||helpMsg1||
+<Press ESC to go back>
+
+ Good day to You! Welcome to the ASCII Ball, which is
+a classic-style Ping Pong game made by using only
+text-based graphics! The game is for two players,
+and the winner is whoever scores 7 points first.
+To score a point You need to shoot the ball into
+Your opponent's scoring area by using a platform.
+The scoring areas are behindeach of the platforms.
+To defend Your area, bounce the ball off Your platform.
+Player 1 controls his platform(on the left)
+by pressing 'W' to go UP, and 'S' to go DOWN;
+Player 2 controls are 'O' - UP, 'L' - DOWN.
+
+<Press ENTER to continue>
+|stop|
+
+||helpMsg2||
+<Press ESC to go back>
+
+        o-----------------------------
+        |
+        |<-- scoring area
+        |
+        |
+        |X                   
+        |X                   O <-- ball
+        |X <-- platform
+        |X
+        |X
+        |
+        |
+        o-----------------------------
+		
+ At the start of the game, the ball is always
+in the middle of the board. Initially, it will
+be heading to the Player 1. In the next rounds
+the ball will fly to a previous round winner.
+So, that's about it! Now try it yourself!
+
+<Press ENTER to continue>
+|stop|
+
+
+
+y = ax+b
+y = (MINY+MAXY)/2;
