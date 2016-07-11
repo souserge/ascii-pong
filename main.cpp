@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <windows.h>
+#include <wincon.h>
 #include <mmsystem.h>
 #include <conio.h>
 #include <time.h>
@@ -11,17 +12,18 @@
 #define MINX 3
 #define MAXY 37
 #define MINY 2
+#define TERMH 2
 
 enum {STAY, UP, DOWN};
 //double slopeValues[] = {0.25, 0.5, 1, 1.5, 2, 2.5, 3};
 
 typedef struct Ball {
     double x, y;
-    short dir;
-    short ymom;
+    short dir, ymom;
     double slope;
     double speed;
-    int offset;
+    double offset;
+    char prevChar;
 } Ball;
 
 typedef struct Platform {
@@ -29,6 +31,12 @@ typedef struct Platform {
     int len;
     int mom;
 } Platform;
+
+typedef struct Terminal {
+    int startX, startY;
+    int lastX, lastY;
+    int length, height;
+} Terminal;
 
 int platLen = 5;
 
@@ -67,6 +75,19 @@ void gotoxy( int column, int line )
     coord
     );
   }
+
+char getxy(int x, int y)
+{
+    HANDLE     hStdOut      = GetStdHandle( STD_OUTPUT_HANDLE );
+   // PCHAR_INFO buffer       = new CHAR_INFO[ 1 ];
+   CHAR_INFO buffer;
+    COORD      buffer_size  = { 1, 1 };
+    COORD      buffer_index = { 0, 0 };  // read/write rectangle has upper-right corner at upper-right corner of buffer
+    SMALL_RECT read_rect    = { x,     y,     x     , y    };
+
+    ReadConsoleOutput(  hStdOut, &buffer, buffer_size, buffer_index, &read_rect );
+    return (char)buffer.Char.AsciiChar;
+}
 
 int wherex()
   {
@@ -129,7 +150,7 @@ Ball genInitPos(int dir)
     Ball b;
     b.x = MINX+(MAXX-MINX)/2;
     b.dir = dir;
-    b.slope = fRand(4) - 2;
+    b.slope = fRand(2.5);
     if (b.slope > -0.1 && b.slope < 0.1) {
         b.slope = 1;
     }
@@ -137,7 +158,7 @@ Ball genInitPos(int dir)
         b.ymom = dir;
     else
         b.ymom = -1*dir;
-    b.offset = MINY+rand()%(MAXY-1) - b.slope*b.x -2; //TOFIX
+    b.offset = MINY+rand()%(MAXY-MINY-1) - b.slope*b.x +1; //TOFIX
     b.speed = sqrt(2)/(sqrt(b.slope*b.slope+1));
     b.y = getY(b);
     return b;
@@ -180,9 +201,12 @@ void drawField()
     putchar('o');
 }
 
-void drawBall(Ball b)
+void drawBall(Ball &b)
 {
-    gotoxy(round(b.x), round(b.y));
+    int x = round(b.x);
+    int y = round(b.y);
+    gotoxy(x, y);
+    b.prevChar = getxy(x, y);
     putch('O');
 }
 
@@ -282,7 +306,7 @@ void handleBallMove(Ball &b, Platform &plat1, Platform &plat2)
     }
 }
 
-void drawFigures(Ball b, Platform plat1, Platform plat2)
+void drawFigures(Ball &b, Platform &plat1, Platform &plat2)
 {
     drawBall(b);
     drawPlat(plat1);
@@ -305,18 +329,6 @@ int scored(int result)
     return 0;
 }
 
-void doInitStuff(Ball &b, Platform &plat1, Platform &plat2, int dir)
-{
-    system("cls");
-    drawField();
-    b = genInitPos(dir);
-    plat1 = initPlat(MINX);
-    plat2 = initPlat(MAXX);
-    drawPlat(plat1);
-    drawPlat(plat2);
-    drawBall(b);
-    Sleep(1337);
-}
 
 int handleNav(int &state, int noOfStates)
 {
@@ -423,6 +435,37 @@ int mainMenu()
     return 0;
 }
 
+void drawScore(int score, int x, int y)
+{
+    char keyword[15];
+    sprintf(keyword, "||num%d||", score);
+    asciiPr(keyword, x, y);
+}
+
+
+void printResult(Terminal term, int p1Score, int p2Score)
+{
+//    gotoxy(5, term.startY);
+//    printf("Player1:  %d", p1Score);
+//    gotoxy(term.length-20, term.startY);
+//    printf("Player2:  %d", p2Score);
+    drawScore(p1Score, MINX+5, MINY+3);
+    drawScore(p2Score, MAXX-15, MINY+3);
+}
+
+
+Terminal initTerminal()
+{
+    Terminal term;
+    term.startX = 0;
+    term.startY = MAXY+3;
+    term.lastX = term.startX;
+    term.lastY = term.startY;
+    term.height = TERMH;
+    term.length = MAXX;
+    return term;
+}
+
 void updateBallPos(Ball &b, int &oldX, int &oldY)
 {
     oldX = round(b.x);
@@ -435,9 +478,13 @@ int mainGameLoop()
 {
     Ball b;
     Platform plat1, plat2;
+    Terminal term;
+
+    term = initTerminal();
+    int state = 0;
     int oldX, oldY;
     int dir = -1;
-    int wait = 25;
+    int wait = 20;
     int result = 0;
     int p1Score = 0;
     int p2Score = 0;
@@ -455,18 +502,38 @@ int mainGameLoop()
             p2Score++;
             dir = 1;
         }
+
+        system("cls");
+        drawField();
+        printResult(term, p1Score, p2Score);
         if (p1Score >= scoreLimit)
         {
             isRunning = 0;
+            asciiPr("||p1Win||", (MINX+MAXX)/2 - 37, (MINY+MAXY)/2 - 3);
+            Sleep(2000);
+            fflush(stdin);
+            gotoxy((MAXX-28), (MAXY-2));
+            printf("<Press ENTER to continue>");
+            while (handleNav(state, 0) != 1);
         }
         else if (p2Score >= scoreLimit)
         {
             isRunning = 0;
+            asciiPr("||p2Win||", (MINX+MAXX)/2 - 39, (MINY+MAXY)/2 - 3);
+            Sleep(2000);
+            fflush(stdin);
+            gotoxy((MAXX-28), (MAXY-2));
+            printf("<Press ENTER to continue>");
+            while (handleNav(state, 0) != 1);
         }
-        else
-        {
-            doInitStuff(b, plat1, plat2, dir);
-
+        else {
+            plat1 = initPlat(MINX);
+            plat2 = initPlat(MAXX);
+            drawPlat(plat1);
+            drawPlat(plat2);
+            b = genInitPos(dir);
+            drawBall(b);
+            Sleep(1337);
             int correctPos = 1;
             while (correctPos)
             {
@@ -481,7 +548,9 @@ int mainGameLoop()
                     keyboard(plat1, plat2);
                     handleInput(plat1, plat2);
                     handleBallMove(b, plat1, plat2);
-                    clearChar(oldX, oldY);
+                    gotoxy(oldX, oldY);
+                    putch(b.prevChar);
+                    //putch('1');
                     drawFigures(b, plat1, plat2);
                     Sleep(wait);
                 }
@@ -492,8 +561,10 @@ int mainGameLoop()
 
 void gbMessage()
 {
+    int state;
     system("cls");
     asciiPr("||goodbye||", ((MINX+MAXX+1)/2-26), (MINY+MAXY+1)/3);
+    fflush(stdin);
     gotoxy((MINX+MAXX-20), (MINY+MAXY-3));
     printf("<Press any key>");
     getch();
@@ -503,7 +574,7 @@ void initConsole()
 {
     char mode[300];
     if (MAXX > 78 && MAXY > 28)
-        sprintf(mode, "MODE CON: COLS=%d LINES=%d", (MINX+MAXX+1), (MINY+MAXY+1));
+        sprintf(mode, "MODE CON: COLS=%d LINES=%d", (MINX+MAXX+1), (MINY+MAXY+TERMH+1));
     else
         sprintf(mode, "MODE CON: COLS=%d LINES=%d", 80, 28);
     system(mode);

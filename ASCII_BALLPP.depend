@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1468067791 source:c:\studies\programming\apps\games\ascii_ballpp\main.cpp
+1468232690 source:c:\studies\programming\apps\games\ascii_ballpp\main.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<math.h>
 	<windows.h>
+	<wincon.h>
 	<mmsystem.h>
 	<conio.h>
 	<time.h>
