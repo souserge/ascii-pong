@@ -12,9 +12,9 @@
 #define MINX 3
 #define MAXY 37
 #define MINY 2
-#define TERMH 2
+#define TERMH 0
 
-enum {STAY, UP, DOWN};
+enum {UP = -1, STAY = 0, DOWN = 1};
 //double slopeValues[] = {0.25, 0.5, 1, 1.5, 2, 2.5, 3};
 
 typedef struct Ball {
@@ -23,6 +23,7 @@ typedef struct Ball {
     double slope;
     double speed;
     double offset;
+    double vel;
     char prevChar;
 } Ball;
 
@@ -38,7 +39,7 @@ typedef struct Terminal {
     int length, height;
 } Terminal;
 
-int platLen = 5;
+int platLen = 8;
 
 void stopWav(void) {
     sndPlaySound(NULL, SND_ASYNC);
@@ -143,23 +144,18 @@ void asciiPr(char *keyword, int x, int y)
     fclose(art);
 }
 
-int getY(Ball ball) {return MINY + ball.slope*ball.x + ball.offset;}
+int getY(Ball ball) {return ball.slope*ball.x + ball.offset;}
 
 Ball genInitPos(int dir)
 {
     Ball b;
     b.x = MINX+(MAXX-MINX)/2;
     b.dir = dir;
-    b.slope = fRand(2.5);
-    if (b.slope > -0.1 && b.slope < 0.1) {
-        b.slope = 1;
-    }
-    if(b.slope > 0)
-        b.ymom = dir;
-    else
-        b.ymom = -1*dir;
-    b.offset = MINY+rand()%(MAXY-MINY-1) - b.slope*b.x +1; //TOFIX
-    b.speed = sqrt(2)/(sqrt(b.slope*b.slope+1));
+    b.slope = 0;
+    b.ymom = 0;
+    b.offset = (MAXY-MINY)/2;
+    b.vel = 0.76;
+    b.speed = b.vel/(sqrt(b.slope*b.slope+1));
     b.y = getY(b);
     return b;
 }
@@ -271,39 +267,60 @@ void handleInput(Platform &plat1, Platform &plat2)
     }
 }
 
-void handleBallMove(Ball &b, Platform &plat1, Platform &plat2)
+void handleBallMove(Ball &b, Platform &plat1, Platform &plat2, int &counter)
 {
-    if  (b.dir == -1 && b.x <= (double)(plat1.x + b.speed) && b.x > plat1.x && b.y >= plat1.y && b.y <= plat1.y + plat1.len)
+    if  (b.dir == -1 && b.x <= (double)(plat1.x + b.speed) && b.x >= plat1.x && round(b.y) >= plat1.y && round(b.y) <= plat1.y + plat1.len)
     {
-        b.offset += 2*b.slope*b.x;
+        counter++;
         b.slope *= -1;
+        b.slope += (fRand(0.3)+0.3)*plat1.mom;
+        b.vel += (fRand(0.12)-0.05)*plat1.mom*b.ymom;
         b.dir *= -1;
         b.x = plat1.x+1;
+        b.offset = b.y-b.slope*b.x;
+        b.speed = b.vel/(sqrt(b.slope*b.slope+1));
         playWav("platHit.wav", 0);
+        if (counter%2 == 0 && counter < 10)
+            b.vel += 0.2;
     }
-    if (b.dir == 1 && b.x >= (double)(plat2.x - b.speed) && b.x < plat2.x && b.y >= plat2.y && b.y <= plat2.y + plat2.len)
+    if (b.dir == 1 && b.x >= (double)(plat2.x - b.speed) && b.x <= plat2.x && round(b.y) >= plat2.y && round(b.y) <= plat2.y + plat2.len)
     {
-        b.offset += 2*b.slope*b.x;
+        counter++;
         b.slope *= -1;
+        b.slope += (fRand(0.3)+0.3)*plat2.mom;
+        b.vel += (fRand(0.12)-0.05)*plat1.mom*b.ymom;
         b.dir *= -1;
         b.x = plat2.x-1;
+        b.offset = b.y-b.slope*b.x;
+        b.speed = b.vel/(sqrt(b.slope*b.slope+1));
         playWav("platHit.wav", 0);
+        if (counter%2 == 0 && counter < 10)
+            b.vel += 0.2;
     }
-
+    if(b.slope > 0)
+        b.ymom = b.dir;
+    else if(b.slope < 0)
+        b.ymom = -1*b.dir;
+    else
+        b.ymom = 0;
     if ( b.y <= MINY && b.ymom == -1) {
-        b.offset += 2*b.slope*b.x;
         b.slope *= -1;
-        b.ymom = 1;
         b.y = MINY;
+        b.offset = b.y-b.slope*b.x;
         playWav("board.wav", 0);
     }
     if (b.y >= MAXY && b.ymom == 1) {
-        b.offset += 2*b.slope*b.x;
         b.slope *= -1;
-        b.ymom = -1;
         b.y = MAXY;
+        b.offset = b.y-b.slope*b.x;
         playWav("board.wav", 0);
     }
+    if(b.slope > 0)
+        b.ymom = b.dir;
+    else if(b.slope < 0)
+        b.ymom = -1*b.dir;
+    else
+        b.ymom = 0;
 }
 
 void drawFigures(Ball &b, Platform &plat1, Platform &plat2)
@@ -401,13 +418,14 @@ int mainMenu()
         action = 0;
         system("cls");
         asciiPr("||bannerAB||", ((MINX+MAXX+1)/2-39), MINY+1);
+        asciiPr("||controlsMM||", MINX, MAXY);
+
         gotoxy((MINX+MAXX+1)/2-2, MINY+11+6);
         printf("START");
         gotoxy((MINX+MAXX+1)/2-2, MINY+11+8);
         printf("HELP");
         gotoxy((MINX+MAXX+1)/2-2, MINY+11+10);
         printf("QUIT");
-
         gotoxy((MINX+MAXX+1)/2-4, MINY+11+6);
         putch('>');
         while (!(action = handleNav(state, 3)))
@@ -445,10 +463,6 @@ void drawScore(int score, int x, int y)
 
 void printResult(Terminal term, int p1Score, int p2Score)
 {
-//    gotoxy(5, term.startY);
-//    printf("Player1:  %d", p1Score);
-//    gotoxy(term.length-20, term.startY);
-//    printf("Player2:  %d", p2Score);
     drawScore(p1Score, MINX+5, MINY+3);
     drawScore(p2Score, MAXX-15, MINY+3);
 }
@@ -484,7 +498,7 @@ int mainGameLoop()
     int state = 0;
     int oldX, oldY;
     int dir = -1;
-    int wait = 20;
+    int wait = 12;
     int result = 0;
     int p1Score = 0;
     int p2Score = 0;
@@ -535,6 +549,7 @@ int mainGameLoop()
             drawBall(b);
             Sleep(1337);
             int correctPos = 1;
+            int counter = 0;
             while (correctPos)
             {
                 updateBallPos(b, oldX, oldY);
@@ -547,10 +562,9 @@ int mainGameLoop()
                 {
                     keyboard(plat1, plat2);
                     handleInput(plat1, plat2);
-                    handleBallMove(b, plat1, plat2);
+                    handleBallMove(b, plat1, plat2, counter);
                     gotoxy(oldX, oldY);
                     putch(b.prevChar);
-                    //putch('1');
                     drawFigures(b, plat1, plat2);
                     Sleep(wait);
                 }
@@ -564,6 +578,7 @@ void gbMessage()
     int state;
     system("cls");
     asciiPr("||goodbye||", ((MINX+MAXX+1)/2-26), (MINY+MAXY+1)/3);
+    Sleep(1000);
     fflush(stdin);
     gotoxy((MINX+MAXX-20), (MINY+MAXY-3));
     printf("<Press any key>");
@@ -573,12 +588,13 @@ void gbMessage()
 void initConsole()
 {
     char mode[300];
-    if (MAXX > 78 && MAXY > 28)
+    if (MAXX > 80 && MAXY > 35)
         sprintf(mode, "MODE CON: COLS=%d LINES=%d", (MINX+MAXX+1), (MINY+MAXY+TERMH+1));
     else
         sprintf(mode, "MODE CON: COLS=%d LINES=%d", 80, 28);
     system(mode);
-    system("color 3B");
+    system("TITLE ASCII Ball");
+    system("COLOR 3B");
 }
 
 int main(int argc, char *argv[])
