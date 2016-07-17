@@ -32,7 +32,18 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="dataControl.cpp" />
+		<Unit filename="dataControl.hpp" />
+		<Unit filename="engine.cpp" />
+		<Unit filename="engine.hpp" />
+		<Unit filename="globVars.hpp" />
+		<Unit filename="graphics.cpp" />
+		<Unit filename="graphics.hpp" />
+		<Unit filename="inputHandle.cpp" />
+		<Unit filename="inputHandle.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="networking.cpp" />
+		<Unit filename="networking.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

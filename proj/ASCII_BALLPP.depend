@@ -11,3 +11,119 @@
 	<time.h>
 	<ctype.h>
 
+1468581740 source:c:\studies\programming\projects\games\ascii_ballpp\proj\datacontrol.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+	<wincon.h>
+	<mmsystem.h>
+	<conio.h>
+	<time.h>
+	<ctype.h>
+	"dataControl.hpp"
+	"engine.hpp"
+	"graphics.hpp"
+	"inputHandle.hpp"
+	"networking.hpp"
+	"globVars.hpp"
+
+1468747839 c:\studies\programming\projects\games\ascii_ballpp\proj\globvars.hpp
+
+1468498356 c:\studies\programming\projects\games\ascii_ballpp\proj\datacontrol.hpp
+
+1468746383 c:\studies\programming\projects\games\ascii_ballpp\proj\engine.hpp
+	"globVars.hpp"
+
+1468749418 c:\studies\programming\projects\games\ascii_ballpp\proj\graphics.hpp
+
+1468749364 c:\studies\programming\projects\games\ascii_ballpp\proj\inputhandle.hpp
+
+1468499094 c:\studies\programming\projects\games\ascii_ballpp\proj\networking.hpp
+
+1468750000 source:c:\studies\programming\projects\games\ascii_ballpp\proj\engine.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+	<wincon.h>
+	<mmsystem.h>
+	<conio.h>
+	<time.h>
+	<ctype.h>
+	"dataControl.hpp"
+	"engine.hpp"
+	"graphics.hpp"
+	"inputHandle.hpp"
+	"networking.hpp"
+	"globVars.hpp"
+
+1468746945 source:c:\studies\programming\projects\games\ascii_ballpp\proj\graphics.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+	<wincon.h>
+	<mmsystem.h>
+	<conio.h>
+	<time.h>
+	<ctype.h>
+	"dataControl.hpp"
+	"engine.hpp"
+	"graphics.hpp"
+	"inputHandle.hpp"
+	"networking.hpp"
+	"globVars.hpp"
+
+1468747969 source:c:\studies\programming\projects\games\ascii_ballpp\proj\inputhandle.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+	<wincon.h>
+	<mmsystem.h>
+	<conio.h>
+	<time.h>
+	<ctype.h>
+	"dataControl.hpp"
+	"engine.hpp"
+	"graphics.hpp"
+	"inputHandle.hpp"
+	"networking.hpp"
+	"globVars.hpp"
+
+1468750511 source:c:\studies\programming\projects\games\ascii_ballpp\proj\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+	<wincon.h>
+	<mmsystem.h>
+	<conio.h>
+	<time.h>
+	<ctype.h>
+	"dataControl.hpp"
+	"engine.hpp"
+	"graphics.hpp"
+	"inputHandle.hpp"
+	"networking.hpp"
+	"globVars.hpp"
+
+1468499042 source:c:\studies\programming\projects\games\ascii_ballpp\proj\networking.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+	<wincon.h>
+	<mmsystem.h>
+	<conio.h>
+	<time.h>
+	<ctype.h>
+	<WinSock2.h>
+
