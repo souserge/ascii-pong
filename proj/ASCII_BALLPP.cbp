@@ -36,6 +36,7 @@
 		<Unit filename="dataControl.hpp" />
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.hpp" />
+		<Unit filename="globVars.cpp" />
 		<Unit filename="globVars.hpp" />
 		<Unit filename="graphics.cpp" />
 		<Unit filename="graphics.hpp" />
@@ -44,6 +45,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="networking.cpp" />
 		<Unit filename="networking.hpp" />
+		<Unit filename="options.cpp" />
+		<Unit filename="options.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

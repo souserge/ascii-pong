@@ -12,30 +12,31 @@
 #include "engine.hpp"
 #include "graphics.hpp"
 #include "inputHandle.hpp"
+#include "options.hpp"
 #include "networking.hpp"
 #include "globVars.hpp"
 
 void drawField()
 {
     int x, y;
-    gotoxy(MINX-1, MINY-1);
+    gotoxy(fieldX-1, fieldY-1);
     putchar('o');
-    for (x = MINX; x <= MAXX; x++)
+    for (x = 0; x <= width; x++)
     {
         putchar('-');
     }
     putchar('o');
-    for (y = MINY; y <= MAXY; y++) {
-        gotoxy(MINX-1, y);
+    for (y = 0; y <= height; y++) {
+        gotoxy(fieldX-1,fieldY+y);
         putchar('|');
-        for (x = MINX; x <= MAXX; x++) {
+        for (x = 0; x <= width; x++) {
             putchar(' ');
         }
         putchar('|');
     }
-    gotoxy(MINX-1, MAXY+1);
+    gotoxy(fieldX-1, fieldY+height+1);
     putchar('o');
-    for (x = MINX; x <= MAXX; x++)
+    for (x = 0; x <= width; x++)
     {
         putchar('-');
     }
@@ -56,6 +57,20 @@ void clearChar(int x, int y)
     gotoxy(x+1, y);
     putch('\b');
     putch(' ');
+}
+
+void clearRow(int x, int y, int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        clearChar(x+i, y);
+    }
+}
+
+void printAt(int x, int y, char *message)
+{
+    gotoxy(x, y);
+    printf("%s", message);
 }
 
 void drawPlat(Platform plat)
@@ -83,27 +98,48 @@ void drawScore(int score, int x, int y)
 
 void printResult(int p1Score, int p2Score)
 {
-    drawScore(p1Score, MINX+5, MINY+3);
-    drawScore(p2Score, MAXX-15, MINY+3);
+    drawScore(p1Score, fieldX+width/10, fieldY+height/10);
+    drawScore(p2Score, fiXW-7-(width)/10, fieldY+height/10);
 }
 
 void gbMessage()
 {
-    int state;
     system("cls");
-    asciiPr("||goodbye||", ((MINX+MAXX+1)/2-26), (MINY+MAXY+1)/3);
+    asciiPr("||goodbye||", ((WID+1)/2-26), (HEI+1)/3);
     Sleep(1000);
     fflush(stdin);
-    gotoxy((MINX+MAXX-20), (MINY+MAXY-3));
+    gotoxy((WID-20), (HEI-4));
     printf("<Press any key>");
     getch();
 }
 
-void moveFooter(int startx, int endx, int y)
+void cls() {system("cls");}
+
+void printNav(int x, int y, char *navArr[64], int length)
+{
+    for (int i = 0; i < length; i++)
+    {
+        gotoxy(x, y+2*i);
+        puts(navArr[i]);
+    }
+    gotoxy(x-2, y);
+    putch('>');
+}
+
+void moveArrow(int &state, int &prevState, int x, int y)
+{
+    if(state != prevState) {
+        clearChar(x, y+2*prevState);
+        gotoxy(x, y+2*state);
+        putch('>');
+        prevState = state;
+    }
+}
+
+void moveFooter(int startx, int endx, int y, char *message)
 {
     static int counter = 0;
-    char message[] = "NOTE: use 'W'/'S' to navigate; ENTER to select          Make sure you have an English keyboard layout!";
-    static int len = strlen(message);
+    int len = strlen(message);
     int startI, endI, x;
 
 
@@ -136,4 +172,42 @@ void drawFooter(int x, int y, int startI, int endI, char message[])
         putchar(message[i]);
     }
     putchar('\0');
+}
+
+int helpMenu()
+{
+    int state, action;
+
+    while (true)
+    {
+        state = 0;
+        action = 0;
+        system("cls");
+        asciiPr("||help||", (WID/2-20), 5);
+        asciiPr("||helpMsg1||", (WID/2-28), 17);
+        while ((action = handleNav(state, 0)) == 0);
+        switch (action)
+        {
+        case -1:
+            return 1;
+        case 1:
+            break;
+        default:
+            break;
+        }
+        system("cls");
+        asciiPr("||help||", (WID/2-20), 5);
+        asciiPr("||helpMsg2||", (WID/2-28), 17);
+
+        while (!(action = handleNav(state, 0)));
+        switch (action)
+        {
+        case -1:
+            break;
+        case 1:
+            return 1;
+        default:
+            return 0;
+        }
+    }
 }

@@ -12,10 +12,9 @@
 #include "engine.hpp"
 #include "graphics.hpp"
 #include "inputHandle.hpp"
+#include "options.hpp"
 #include "networking.hpp"
 #include "globVars.hpp"
-
-int platLen = 8, wait = 12, scoreLimit = 2, playMode = 0, reaction = 0;
 
 int mainGameLoop()
 {
@@ -30,6 +29,7 @@ int mainGameLoop()
     int isRunning = 1;
     while (isRunning)
     {
+        fflush(stdin);
         if (result == 1)
         {
             p1Score++;
@@ -47,7 +47,7 @@ int mainGameLoop()
         if (p1Score >= scoreLimit)
         {
             isRunning = 0;
-            asciiPr("||p1Win||", (MINX+MAXX)/2 - 37, (MINY+MAXY)/2 - 3);
+            asciiPr("||p1Win||", WID/2 - 37, HEI/2 - 3);
             Sleep(2000);
             fflush(stdin);
             gotoxy((MAXX-28), (MAXY-2));
@@ -70,8 +70,8 @@ int mainGameLoop()
             while (handleNav(state, 0) != 1);
         }
         else {
-            plat1 = initPlat(MINX);
-            plat2 = initPlat(MAXX);
+            plat1 = initPlat(fieldX);
+            plat2 = initPlat(fiXW);
             drawPlat(plat1);
             drawPlat(plat2);
             b = genInitPos(dir);
@@ -90,7 +90,8 @@ int mainGameLoop()
                     if (playMode == 1) {
                         handleAI(b, plat2);
                     }
-                    keyboard(plat1, plat2);
+                    if (!keyboard(plat1, plat2))
+                        return 0;
                     handleInput(plat1, plat2);
                     handleBallMove(b, plat1, plat2, counter);
                     gotoxy(oldX, oldY);
@@ -101,10 +102,12 @@ int mainGameLoop()
             }
         }
     }
+    return 1;
 }
 
 int main(int argc, char *argv[])
 {
+    setDefaults();
     initConsole();
     int isGame = 1;
     while (isGame)
@@ -122,7 +125,6 @@ int main(int argc, char *argv[])
             playMode = 2;
             break;
         }
-
         stopWav();
         mainGameLoop();
     }

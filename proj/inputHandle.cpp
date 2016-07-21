@@ -12,51 +12,56 @@
 #include "engine.hpp"
 #include "graphics.hpp"
 #include "inputHandle.hpp"
+#include "options.hpp"
 #include "networking.hpp"
 #include "globVars.hpp"
 
-void keyboard(Platform &plat1, Platform &plat2) {
-        while (kbhit()) {
-            switch (toupper(getch())) {
-            case 'W':
-                plat1.mom = UP;
-                break;
-            case 'S':
-                plat1.mom = DOWN;
-                break;
-            case 'O':
-                if (playMode == 2)
-                    plat2.mom = UP;
-                break;
-            case 'L':
-                if (playMode == 2)
-                    plat2.mom = DOWN;
-                break;
-            default:
-                break;
-            }
+int keyboard(Platform &plat1, Platform &plat2) {
+    GetAsyncKeyState(0x0D); GetAsyncKeyState(0x1B);
+    while (kbhit()) {
+        switch (toupper(getch())) {
+        case 'W':
+            plat1.mom = UP;
+            break;
+        case 'S':
+            plat1.mom = DOWN;
+            break;
+        case 'O':
+            if (playMode == 2)
+                plat2.mom = UP;
+            break;
+        case 'L':
+            if (playMode == 2)
+                plat2.mom = DOWN;
+            break;
+        default:
+            break;
         }
-        if (!GetAsyncKeyState(0x57) && !GetAsyncKeyState(0x53))
-            plat1.mom = STAY;
-        if (playMode == 2 && !GetAsyncKeyState(0x4F) && !GetAsyncKeyState(0x4C))
-            plat2.mom = STAY;
+    }
+    if (!GetAsyncKeyState(0x57) && !GetAsyncKeyState(0x53))
+        plat1.mom = STAY;
+    if (playMode == 2 && !GetAsyncKeyState(0x4F) && !GetAsyncKeyState(0x4C))
+        plat2.mom = STAY;
+    if (GetAsyncKeyState(0x0D) && GetAsyncKeyState(0x1B))
+        return 0;
+    return 1;
 }
 
 void handleInput(Platform &plat1, Platform &plat2)
 {
-    if (plat1.mom == UP && plat1.y > MINY) {
+    if (plat1.mom == UP && plat1.y > fieldY) {
             clearChar(plat1.x, plat1.y+plat1.len-1);
             plat1.y--;
     }
-    if (plat1.mom == DOWN && plat1.y+plat1.len-1 < MAXY) {
+    if (plat1.mom == DOWN && plat1.y+plat1.len-1 < fieldY+height) {
         clearChar(plat1.x, plat1.y);
         plat1.y++;
     }
-    if (plat2.mom == UP && plat2.y > MINY) {
+    if (plat2.mom == UP && plat2.y > fieldY) {
         clearChar(plat2.x, plat2.y+plat2.len-1);
         plat2.y--;
     }
-    if (plat2.mom == DOWN && plat2.y+plat2.len-1 < MAXY) {
+    if (plat2.mom == DOWN && plat2.y+plat2.len-1 < fieldY+height) {
         clearChar(plat2.x, plat2.y);
         plat2.y++;
     }
@@ -64,6 +69,7 @@ void handleInput(Platform &plat1, Platform &plat2)
 
 int handleNav(int &state, int noOfStates)
 {
+    fflush(stdin);
     while (kbhit()) {
             switch (toupper(getch())) {
             case 27:
@@ -86,84 +92,34 @@ int handleNav(int &state, int noOfStates)
         return 0;
 }
 
-int helpMenu()
-{
-    int state, action;
-
-    HELP_MSG1:
-    state = 0;
-    action = 0;
-    system("cls");
-    asciiPr("||help||", ((MINX+MAXX+1)/2-20), MINY+1);
-    asciiPr("||helpMsg1||", ((MINX+MAXX+1)/2-28), MINY+13);
-    while ((action = handleNav(state, 0)) == 0);
-    switch (action)
-    {
-    case -1:
-        return 1;
-    case 1:
-        break;
-    default:
-        break;
-    }
-    system("cls");
-    asciiPr("||help||", ((MINX+MAXX+1)/2-20), MINY+1);
-    asciiPr("||helpMsg2||", ((MINX+MAXX+1)/2-28), MINY+13);
-    while (!(action = handleNav(state, 0)));
-    switch (action)
-    {
-    case -1:
-        goto HELP_MSG1;
-    case 1:
-        return 1;
-    default:
-        return 0;
-    }
-}
-
-int optionsMenu()
-{
-    return 1;
-}
-
 int mainMenu()
 {
     int state, prevState, action;
 
+    char *navArr[64] = {"1 PLAYER", "2 PLAYERS", "HELP", "OPTIONS", "QUIT"};
+    int navLen = 5, xPos, yPos;
+
+    char message[] = "NOTE: use 'W'/'S' to navigate; ENTER to select        Make sure you have an English keyboard layout!";
     int isMenu = 1;
     while(isMenu)
     {
         state = 0;
         prevState = 0;
         action = 0;
-        system("cls");
-        asciiPr("||bannerAB||", 6, 4);
+        xPos = WID/2-3;
+        yPos = 20;
 
-        gotoxy((MINX+MAXX+1)/2-2, MINY+11+6);
-        printf("1 PLAYER");
-        gotoxy((MINX+MAXX+1)/2-2, MINY+11+8);
-        printf("2 PLAYERS");
-        gotoxy((MINX+MAXX+1)/2-2, MINY+11+10);
-        printf("HELP");
-        gotoxy((MINX+MAXX+1)/2-2, MINY+11+12);
-        printf("OPTIONS");
-        gotoxy((MINX+MAXX+1)/2-2, MINY+11+14);
-        printf("QUIT");
-        gotoxy((MINX+MAXX+1)/2-4, MINY+11+6);
-        putch('>');
-        while (!(action = handleNav(state, 5)))
+        cls();
+        asciiPr("||bannerAB||", 6, 4);
+        printNav(xPos, yPos, navArr, navLen);
+        while (!(action = handleNav(state, navLen)))
         {
-            if(state != prevState) {
-                clearChar((MINX+MAXX+1)/2-4, MINY+11+6+2*prevState);
-                gotoxy((MINX+MAXX+1)/2-4, MINY+11+6+2*state);
-                putch('>');
-                prevState = state;
-            }
-            moveFooter(MINX, MAXX, MAXY);
+            moveArrow(state, prevState, xPos-2, yPos);
+            moveFooter(2, WID-2, HEI - 2, message);
             Sleep(40);
         }
         if (action == -1)
-            state = 2;
+            state = 4;
         switch (state)
         {
         case 0:

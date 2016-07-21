@@ -5,8 +5,12 @@
 #define MINX 3
 #define MAXY 37
 #define MINY 2
+#define DEF_WID 104
+#define DEF_HEI 42
 
 enum {UP = -1, STAY = 0, DOWN = 1};
+enum {IDLE, BACK, HIT};
+enum {OFF, ON};
 
 typedef struct Ball {
     double x, y;
@@ -24,7 +28,28 @@ typedef struct Platform {
     int mom;
 } Platform;
 
-extern int platLen, wait, scoreLimit, playMode, reaction;
-extern int fieldX, filedY, width, heigth;
+extern int aiLevel, aiType, wait; extern double ballSpeed; extern int platLen, scoreLimit;
+extern int width, height, sounds; extern char colorBF[10];
+extern int playMode, fieldX, fiXW, fieldY, fiYH, WID, HEI;
+
+void setAIType(int a);
+void setAILevel(int a);
+void setWait(int a);
+void setBallSpeed(double d);
+void setPlatLen(int a);
+void setScoreLimit(int a);
+
+void setWidth(int a);
+void setHeight(int a);
+void setSounds(int a);
+void setColorBF(char *col);
+
+void setPlayMode(int a) ;
+void setFieldX(int a);
+void setFieldY(int a);
+void setFiXW(int a);
+void setFiYH(int a);
+
+void setDefaults();
 
 #endif // GLOBVARS_HPP_INCLUDED

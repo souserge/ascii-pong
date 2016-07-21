@@ -12,6 +12,7 @@
 #include "engine.hpp"
 #include "graphics.hpp"
 #include "inputHandle.hpp"
+#include "options.hpp"
 #include "networking.hpp"
 #include "globVars.hpp"
 
@@ -21,6 +22,10 @@ void stopWav(void) {
 
 void playWav(char *filedest, int loop) {
     stopWav();
+    if (sounds == OFF)
+    {
+        return;
+    }
     char dest[200] = "res/sound/";
     strcat(dest, filedest);
     if (loop) {
@@ -94,14 +99,47 @@ void asciiPr(char *keyword, int x, int y)
     fclose(art);
 }
 
+int isInArray(char c, char *arr, int length)
+{
+    for (int i = 0; i < length; i++)
+    {
+        if (c == arr[i])
+            return 1;
+    }
+    return 0;
+}
+
+//int changeInt(int low, int high, int &param)
+//{
+//    char numChar[50];
+//    gets(numChar);
+//    if (numChar[0] == '\0' || numChar[0] == '\n')
+//        return -1;
+//    int num = atoi(numChar);
+//
+//    if(num >= low && num <= high)
+//    {
+//        param = num;
+//        return 1;
+//    }
+//    return 0;
+//}
+
+void combineArrs(char *arr1[], char *arr2[], int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        strcat(arr1[i], ": ");
+        strcat(arr1[i], arr2[i]);
+    }
+}
 void initConsole()
 {
-    char mode[300];
-    if (MAXX > 80 && MAXY > 35)
-        sprintf(mode, "MODE CON: COLS=%d LINES=%d", (MINX+MAXX+1), (MINY+MAXY+1));
-    else
-        sprintf(mode, "MODE CON: COLS=%d LINES=%d", 80, 28);
+    system("TITLE ASCII PONG");
+
+    char mode[128], color[128];
+    sprintf(mode, "MODE CON: COLS=%d LINES=%d", WID, HEI);
+    sprintf(color, "COLOR %s", colorBF);
     system(mode);
-    system("TITLE ASCII Ball");
-    system("COLOR 3B");
+    system(color);
 }

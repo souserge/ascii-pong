@@ -9,6 +9,7 @@ Platform initPlat(int x);
 void handleBallMove(Ball &b, Platform &plat1, Platform &plat2, int &counter);
 void updateBallPos(Ball &b, int &oldX, int &oldY);
 int isScored(Ball b);
-int handleAI(Ball b, Platform &plat2);
-
+void handleAI(Ball b, Platform &p);
+int crazyAI(Ball b, Platform &p);
+int humanlikeAI(Ball b, Platform &p);
 #endif // ENGINE_HPP_INCLUDED

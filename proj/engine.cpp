@@ -12,19 +12,21 @@
 #include "engine.hpp"
 #include "graphics.hpp"
 #include "inputHandle.hpp"
+#include "options.hpp"
 #include "networking.hpp"
 #include "globVars.hpp"
+
 
 int getY(Ball ball) {return ball.slope*ball.x + ball.offset;}
 
 Ball genInitPos(int dir)
 {
     Ball b;
-    b.x = MINX+(MAXX-MINX)/2;
+    b.x = fieldX+(width)/2;
     b.dir = dir;
     b.slope = 0;
     b.ymom = 0;
-    b.offset = (MAXY-MINY)/2;
+    b.offset = fieldY + (height)/2;
     b.vel = 0.76;
     b.speed = b.vel/(sqrt(b.slope*b.slope+1));
     b.y = getY(b);
@@ -37,7 +39,7 @@ Platform initPlat(int x)
     plat.len = platLen;
     plat.mom = STAY;
     plat.x = x;
-    plat.y = (MAXY - MINY - plat.len)/(2);
+    plat.y = fieldY + height/2 - plat.len/2;
     return plat;
 }
 
@@ -77,15 +79,15 @@ void handleBallMove(Ball &b, Platform &plat1, Platform &plat2, int &counter)
         b.ymom = -1*b.dir;
     else
         b.ymom = 0;
-    if ( b.y <= MINY && b.ymom == -1) {
+    if ( b.y <= fieldY && b.ymom == -1) {
         b.slope *= -1;
-        b.y = MINY;
+        b.y = fieldY;
         b.offset = b.y-b.slope*b.x;
         playWav("board.wav", 0);
     }
-    if (b.y >= MAXY && b.ymom == 1) {
+    if (b.y >= fieldY+height && b.ymom == 1) {
         b.slope *= -1;
-        b.y = MAXY;
+        b.y = fieldY+height;
         b.offset = b.y-b.slope*b.x;
         playWav("board.wav", 0);
     }
@@ -107,11 +109,11 @@ void updateBallPos(Ball &b, int &oldX, int &oldY)
 
 int isScored(Ball b)
 {
-    if (b.x <= MINX) {
+    if (b.x <= fieldX) {
         playWav("score.wav", 0);
         return 2;
     }
-    else if (b.x >= MAXX) {
+    else if (b.x >= fieldX + width) {
         playWav("score.wav", 0);
         return 1;
     }
@@ -119,38 +121,82 @@ int isScored(Ball b)
         return 0;
 }
 
-
-int handleAI(Ball b, Platform &plat2)
+void handleAI(Ball b, Platform &p)
 {
-    static int reactTime = reaction;
-    if (b.dir = 1)
+    switch (aiType)
     {
-        if (reactTime > 0)
+    case 0:
+        crazyAI(b, p);
+        break;
+    case 1:
+        humanlikeAI(b, p);
+        break;
+    }
+}
+
+int crazyAI(Ball b, Platform &p)
+{
+    static int reactTime = 5*aiLevel;
+
+    if (reactTime > 0)
+    {
+        reactTime -= wait;
+    }
+    else if (b.x > fieldX+(2*width)/3)
+    {
+        if (b.y <= p.y)
+            p.mom = UP;
+        else if (b.y >= p.y+p.len)
+            p.mom = DOWN;
+        else
+            reactTime = 5*aiLevel;
+    }
+    else if (b.x > fieldX)
+    {
+        if (p.mom == STAY)
         {
-            reactTime -= wait;
+            p.mom = rand()%3 - 1;
         }
-        else if (b.x > MAXX-(MAXX-MINX)/3)
+        else if (rand()%60 < 6)
         {
-            if (b.y <= plat2.y)
-                plat2.mom = UP;
-            else if (b.y >= plat2.y+plat2.len)
-                plat2.mom = DOWN;
-            else
-                reactTime = reaction;
-        }
-        else if (b.x > MAXX-(MAXX-MINX)/2)
-        {
-            if (plat2.mom == STAY)
-            {
-                plat2.mom = rand()%3 - 1;
-            }
-            else if (rand()%60 < 6)
-            {
-                plat2.mom *= -1;
-            }
+            p.mom *= -1;
         }
     }
-    else
-        plat2.mom = STAY;
+    return 1;
+}
+
+
+int humanlikeAI(Ball b, Platform &p)
+{
+    static int reactTime = 5*aiLevel;
+    static int state = IDLE;
+
+    switch(state)
+    {
+    case IDLE:
+        if(b.dir == 1 && b.x >= fieldX+(2*width)/3)
+            state = HIT;
+        else
+            p.mom = STAY;
+        break;
+    case BACK:
+        if(b.dir == 1 && b.x >= fieldX+(2*width)/3)
+            state = HIT;
+        else if (p.y == fieldY + height/2 - p.len/2)
+            state = IDLE;
+        else if (p.y > fieldY + height/2 - p.len/2)
+            p.mom = UP;
+        else
+            p.mom = DOWN;
+        break;
+    case HIT:
+        if (b.dir == -1)
+            state = BACK;
+        else if (b.y <= p.y)
+            p.mom = UP;
+        else if (b.y >= p.y+p.len)
+            p.mom = DOWN;
+        break;
+    }
     return 1;
 }
