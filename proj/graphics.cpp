@@ -105,24 +105,23 @@ void printResult(int p1Score, int p2Score)
 void gbMessage()
 {
     system("cls");
-    asciiPr("||goodbye||", ((WID+1)/2-26), (HEI+1)/3);
+    asciiPr("||goodbye||", ((WID+1)/2-26), HEI/3);
     Sleep(1000);
     fflush(stdin);
-    gotoxy((WID-20), (HEI-4));
-    printf("<Press any key>");
+    printAt((WID-20), (HEI-4), "<Press any key>");
     getch();
 }
 
 void cls() {system("cls");}
 
-void printNav(int x, int y, char *navArr[64], int length)
+void printNav(int x, int y, char *navArr[64], int length, int state)
 {
     for (int i = 0; i < length; i++)
     {
         gotoxy(x, y+2*i);
         puts(navArr[i]);
     }
-    gotoxy(x-2, y);
+    gotoxy(x-2, y + 2*state);
     putch('>');
 }
 
@@ -183,8 +182,8 @@ int helpMenu()
         state = 0;
         action = 0;
         system("cls");
-        asciiPr("||help||", (WID/2-20), 5);
-        asciiPr("||helpMsg1||", (WID/2-28), 17);
+        asciiPr("||help||", (WID/2-20), HEI/10);
+        asciiPr("||helpMsg1||", (WID/2-28), HEI/10+16);
         while ((action = handleNav(state, 0)) == 0);
         switch (action)
         {
@@ -196,8 +195,8 @@ int helpMenu()
             break;
         }
         system("cls");
-        asciiPr("||help||", (WID/2-20), 5);
-        asciiPr("||helpMsg2||", (WID/2-28), 17);
+        asciiPr("||help||", (WID/2-20), HEI/10);
+        asciiPr("||helpMsg2||", (WID/2-28), HEI/10+16);
 
         while (!(action = handleNav(state, 0)));
         switch (action)

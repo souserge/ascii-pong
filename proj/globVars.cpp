@@ -56,9 +56,9 @@ void setFiYH(int a) {fiYH= a;}
 void setDefaults()
 {
     aiType = 1;
-    aiLevel = 20;
-    wait = 12;
-    ballSpeed = 0.8;
+    aiLevel = 1;
+    wait = 15;
+    ballSpeed = 1;
     platLen = 8;
     scoreLimit = 7;
 

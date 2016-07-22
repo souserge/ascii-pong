@@ -50,8 +50,7 @@ int mainGameLoop()
             asciiPr("||p1Win||", WID/2 - 37, HEI/2 - 3);
             Sleep(2000);
             fflush(stdin);
-            gotoxy((MAXX-28), (MAXY-2));
-            printf("<Press ENTER to continue>");
+            printAt((WID-30), (HEI-3), "<Press ENTER to continue>");
             while (handleNav(state, 0) != 1);
         }
         else if (p2Score >= scoreLimit)
@@ -59,14 +58,13 @@ int mainGameLoop()
             isRunning = 0;
             if (playMode == 1)
             {
-              asciiPr("||comWin||", (MINX+MAXX)/2 - 39, (MINY+MAXY)/2 - 3);
+              asciiPr("||comWin||", WID/2 - 41, HEI/2 - 3);
             }
             else
-                asciiPr("||p2Win||", (MINX+MAXX)/2 - 39, (MINY+MAXY)/2 - 3);
+                asciiPr("||p2Win||", WID/2 - 39, HEI/2 - 3);
             Sleep(2000);
             fflush(stdin);
-            gotoxy((MAXX-28), (MAXY-2));
-            printf("<Press ENTER to continue>");
+            printAt((WID-30), (HEI-3), "<Press ENTER to continue>");
             while (handleNav(state, 0) != 1);
         }
         else {

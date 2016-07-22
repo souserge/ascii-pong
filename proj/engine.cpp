@@ -27,7 +27,7 @@ Ball genInitPos(int dir)
     b.slope = 0;
     b.ymom = 0;
     b.offset = fieldY + (height)/2;
-    b.vel = 0.76;
+    b.vel = ballSpeed;
     b.speed = b.vel/(sqrt(b.slope*b.slope+1));
     b.y = getY(b);
     return b;
@@ -56,7 +56,7 @@ void handleBallMove(Ball &b, Platform &plat1, Platform &plat2, int &counter)
         b.offset = b.y-b.slope*b.x;
         b.speed = b.vel/(sqrt(b.slope*b.slope+1));
         playWav("platHit.wav", 0);
-        if (counter%2 == 0 && counter < 10)
+        if (counter%2 == 0 && counter < 12)
             b.vel += 0.2;
     }
     if (b.dir == 1 && b.x >= (double)(plat2.x - b.speed) && b.x <= plat2.x && round(b.y) >= plat2.y && round(b.y) <= plat2.y + plat2.len)
@@ -136,20 +136,12 @@ void handleAI(Ball b, Platform &p)
 
 int crazyAI(Ball b, Platform &p)
 {
-    static int reactTime = 5*aiLevel;
-
-    if (reactTime > 0)
-    {
-        reactTime -= wait;
-    }
-    else if (b.x > fieldX+(2*width)/3)
+    if (b.x > fieldX+(2*width)/3)
     {
         if (b.y <= p.y)
             p.mom = UP;
         else if (b.y >= p.y+p.len)
             p.mom = DOWN;
-        else
-            reactTime = 5*aiLevel;
     }
     else if (b.x > fieldX)
     {
@@ -168,7 +160,6 @@ int crazyAI(Ball b, Platform &p)
 
 int humanlikeAI(Ball b, Platform &p)
 {
-    static int reactTime = 5*aiLevel;
     static int state = IDLE;
 
     switch(state)

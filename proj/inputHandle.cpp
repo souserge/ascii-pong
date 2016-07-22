@@ -100,26 +100,24 @@ int mainMenu()
     int navLen = 5, xPos, yPos;
 
     char message[] = "NOTE: use 'W'/'S' to navigate; ENTER to select        Make sure you have an English keyboard layout!";
+    state = 0;
+    prevState = 0;
     int isMenu = 1;
     while(isMenu)
     {
-        state = 0;
-        prevState = 0;
         action = 0;
-        xPos = WID/2-3;
-        yPos = 20;
+        xPos = WID/2-4;
+        yPos = HEI/10+16;
 
         cls();
-        asciiPr("||bannerAB||", 6, 4);
-        printNav(xPos, yPos, navArr, navLen);
-        while (!(action = handleNav(state, navLen)))
+        asciiPr("||bannerAB||", WID/2-45, HEI/10);
+        printNav(xPos, yPos, navArr, navLen, state);
+        while ((action = handleNav(state, navLen) != 1))
         {
             moveArrow(state, prevState, xPos-2, yPos);
             moveFooter(2, WID-2, HEI - 2, message);
             Sleep(40);
         }
-        if (action == -1)
-            state = 4;
         switch (state)
         {
         case 0:

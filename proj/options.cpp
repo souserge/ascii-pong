@@ -17,9 +17,6 @@
 #include "globVars.hpp"
 
 
-//extern int fieldX, fiXW, fieldY, fiYH, playMode;
-//
-//extern int platLen, wait, scoreLimit, reaction, aiType;
 void updateColor()
 {
     char color[128];
@@ -29,19 +26,19 @@ void updateColor()
 
 void updateField()
 {
-    if (width > WID-7)
+    if (width > DEF_WID-7)
     {
         WID = width+7;
     }
-    if (height > HEI-5)
+    if (height > DEF_HEI-5)
     {
         HEI = height+5;
     }
-    if (width < WID-7)
+    if (width < DEF_WID-7)
     {
         WID = DEF_WID;
     }
-    if (height < HEI-5)
+    if (height < DEF_HEI-5)
     {
         HEI = DEF_HEI;
     }
@@ -57,6 +54,7 @@ void updateField()
     sprintf(mode, "MODE CON: COLS=%d LINES=%d", WID, HEI);
     system(mode);
 }
+
 void updateSounds()
 {
     static int prevState = OFF;
@@ -74,26 +72,192 @@ void updateAll()
     updateField();
 }
 
+
+
+int changeInt(int xPos, int yPos, int low, int high, int &param)
+{
+    int num;
+    char buffer[128];
+    char dec[16] = "0123456789";
+    gets(buffer);
+    if (buffer[0] == '\0' || buffer[0] == '\n')
+        return 2;
+
+    int isInThere = 0;
+    for (int i = 0; i < strlen(buffer); i++)
+    {
+        if (isInArray(buffer[i], dec, strlen(dec)))
+        {
+            isInThere = 1;
+            break;
+        }
+    }
+    clearRow(xPos, yPos, 40);
+    if (!isInThere) {
+        printAt(xPos, yPos, "NOT A NUMBER");
+        getch();
+        return 0;
+    }
+    num = atoi(buffer);
+    if (num < low || num > high) {
+        printAt(xPos, yPos, "OUT OF RANGE");
+        getch();
+        return 0;
+    }
+    param = num;
+    return 1;
+}
+
+int changeState(int xPos, int yPos, int initState, char *statArr[], int len)
+{
+    int state = initState, action = 0, prevState = initState;
+
+    printAt(xPos, yPos, statArr[state]);
+    while (!(action = handleNav(state, len)))
+        {
+            if(state != prevState) {
+                clearRow(xPos, yPos, 40);
+                printAt(xPos, yPos, statArr[state]);
+                prevState = state;
+            }
+            Sleep(40);
+        }
+        if (action == -1)
+            return -1;
+        else
+            return state;
+}
+
+
+
+int changeAIType(int xPos, int yPos)
+{
+    char *statArr[32] = {"CRAZY_BALL", "THUNDER_BEAT"};
+    int state;
+    if((state = changeState(xPos, yPos, aiType, statArr, 2)) != -1)
+        aiType = state;
+    return 1;
+}
+
+
+int changeAILevel(int xPos, int yPos)
+{
+    char *statArr[32] = {"EASY", "MEDIUM", "HARD"};
+    int state;
+    if (state = changeState(xPos, yPos, aiLevel, statArr, 3) != -1)
+        aiLevel = state;
+    return 1;
+}
+
+int changeGameSpeed(int xPos, int yPos)
+{
+   // char *statArr[32] = {"IE", "PENTIUM 4", "HAYAI!!", "USAIN BOLT", "C++", "TACHYON"};
+    int state;
+    int val;
+    if (!(val = changeInt(xPos, yPos, 0, 50, state)))
+        return 0;
+    if (val != 2)
+        wait = 50 - state;
+    return 1;
+}
+
+int changeBallSpeed(int xPos, int yPos)
+{
+    int state;
+    int val;
+    if (!(val = changeInt(xPos, yPos, 0, 50, state)))
+        return 0;
+    if (val != 2)
+        ballSpeed = (double)state/25 + 0.5;
+    return 1;
+}
+
+int changePlatLen(int xPos, int yPos)
+{
+    int num;
+    int low = 1;
+    int high = height - 4;
+    char buffer[128];
+    char dec[16] = "0123456789";
+    gets(buffer);
+    if (buffer[0] == '\0' || buffer[0] == '\n')
+        return 1;
+
+    int isInThere = 0;
+    for (int i = 0; i < strlen(buffer); i++)
+    {
+        if (isInArray(buffer[i], dec, strlen(dec)))
+        {
+            isInThere = 1;
+            break;
+        }
+    }
+    clearRow(xPos, yPos, 40);
+    if (!isInThere) {
+        printAt(xPos, yPos, "NOT A NUMBER");
+        getch();
+        return 0;
+    }
+    num = atoi(buffer);
+    if (num < low) {
+        printAt(xPos, yPos, "HOW DO YOU IMAGINE THIS?");
+        getch();
+        return 0;
+    }
+    if (num > high) {
+        printAt(xPos, yPos, "INCREASE THE FIELD HEIGHT FIRST");
+        getch();
+        return 0;
+    }
+    platLen = num;
+}
+
 int diffSetMenu()
 {
     int state, prevState, action;
 
-    char *navArr[64] = {"AI TYPE", "AI STRENGTH", "GAME SPEED", "BALL SPEED", "PLATFORM LENGTH", "SCORE LIMIT"};
-    int navLen = 6, xPos, yPos;
+    char *aiTypeArr[64] = {"CRAZY_BALL", "THUNDER_BEAT"},
+        *aiLevelArr[64] = {"EASY", "MEDIUM", "HARD"};
+    char aiTypeChar[32],
+        aiLevelChar[32],
+        gameSpeedChar[32],
+        ballSpeedChar[32],
+        platLenChar[32],
+        scoreLimChar[32];
+    char newArr[6][128], *newA[128];
+    char *valArr[64] = {aiTypeChar, aiLevelChar, gameSpeedChar, ballSpeedChar, platLenChar, scoreLimChar};
 
+    char *navArr[64] = {"AI TYPE('W'/'S')", "AI LEVEL", "GAME SPEED(0-50)", "BALL SPEED(0-50)", "PLATFORM LENGTH(1-???)", "SCORE LIMIT(1-9)"};
+    int navLen = 6, xPos, yPos;
+    state = 0;
+    prevState = 0;
     int isMenu = 1;
     while (isMenu)
     {
-        state = 0;
-        prevState = 0;
         action = 0;
         xPos = WID/2-7;
-        yPos = 20;
+        yPos = HEI/10 + 16;
+
+
+        itoa(50-wait, gameSpeedChar, 10);
+        itoa(platLen, platLenChar, 10);
+        itoa(scoreLimit, scoreLimChar, 10);
+        itoa((double)(ballSpeed - 0.5)*25, ballSpeedChar, 10);
+        strcpy(aiTypeChar, aiTypeArr[aiType]);
+        strcpy(aiLevelChar, aiLevelArr[aiLevel]);
+        for (int i = 0; i < navLen; i++)
+        {
+            newArr[i][0] = '\0';
+            strcat(newArr[i], navArr[i]);
+            strcat(newArr[i], ": ");
+            strcat(newArr[i], valArr[i]);
+            newA[i] = newArr[i];
+        }
 
         system("cls");
-        asciiPr("||options||", 16, 4);
+        asciiPr("||options||", WID/2-34, HEI/10);
         printAt(xPos-4, yPos-2, "DIFFICULTY SETTINGS:");
-        printNav(xPos, yPos, navArr, navLen);
+        printNav(xPos, yPos, newA, navLen, state);
         while (!(action = handleNav(state, navLen)))
         {
             moveArrow(state, prevState, xPos-2, yPos);
@@ -101,26 +265,55 @@ int diffSetMenu()
         }
         if (action == -1)
             return 1;
-        clearRow(xPos, yPos + 2*state, 20);
-        printAt(xPos - 4, yPos + 2*state, navArr[state]);
-        switch(state)
+
+        int isNotSet = 1;
+        while (isNotSet)
         {
-        case 0:
-            break;
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            break;
-        default:
-            return 0;
+            clearRow(xPos, yPos + 2*state, 40);
+            printAt(xPos - 4, yPos + 2*state, navArr[state]);
+            printf(": ");
+            switch(state)
+            {
+            case 0:
+                if (changeAIType(xPos - 2 + strlen(navArr[state]), yPos + 2*state))
+                    isNotSet = 0;
+                break;
+            case 1:
+                if (changeAILevel(xPos - 2 + strlen(navArr[state]), yPos + 2*state))
+                    isNotSet = 0;
+                break;
+            case 2:
+                if (changeGameSpeed(xPos - 4, yPos + 2*state))
+                    isNotSet = 0;
+                break;
+            case 3:
+                if (changeBallSpeed(xPos - 4, yPos + 2*state))
+                    isNotSet = 0;
+                break;
+            case 4:
+                if (changePlatLen(xPos - 4, yPos + 2*state))
+                    isNotSet = 0;
+                break;
+            case 5:
+                if (changeInt(xPos - 4, yPos + 2*state, 1, 9, scoreLimit))
+                    isNotSet = 0;
+                break;
+            default:
+                return 0;
+            }
         }
     }
+    return 1;
+}
+
+
+
+int changeSounds(int xPos, int yPos)
+{
+    char *statArr[32] = {"OFF", "ON"};
+    int state = sounds;
+    if ((state = changeState(xPos, yPos, sounds, statArr, 2)) != -1)
+        sounds = state;
     return 1;
 }
 
@@ -169,95 +362,28 @@ int changeColor(int xPos, int yPos)
     return 0;
 }
 
-
-int changeSounds(int xPos, int yPos)
-{
-    int state = sounds, action = 0, prevState = sounds;
-
-    if (!state)
-        printAt(xPos, yPos, "OFF");
-    else
-        printAt(xPos, yPos, "ON");
-
-    while (!(action = handleNav(state, 2)))
-        {
-            if(state != prevState) {
-                clearRow(xPos, yPos, 10);
-                if (!state)
-                    printAt(xPos, yPos, "OFF");
-                else
-                    printAt(xPos, yPos, "ON");
-                prevState = state;
-            }
-            Sleep(40);
-        }
-        if (action == -1)
-            return 1;
-        else
-            sounds = state;
-}
-
-int changeInt(int xPos, int yPos, int low, int high, int &param)
-{
-    int num;
-    char buffer[128];
-    char dec[16] = "0123456789";
-    gets(buffer);
-    if (buffer[0] == '\0' || buffer[0] == '\n')
-        return 1;
-
-    int isInThere = 0;
-    for (int i = 0; i < strlen(buffer); i++)
-    {
-        if (isInArray(buffer[i], dec, strlen(dec)))
-        {
-            isInThere = 1;
-            break;
-        }
-    }
-    clearRow(xPos, yPos, 40);
-    if (!isInThere) {
-        printAt(xPos, yPos, "NOT A NUMBER");
-        getch();
-        return 0;
-    }
-    num = atoi(buffer);
-    if (num < low || num > high) {
-        printAt(xPos, yPos, "OUT OF RANGE");
-        getch();
-        return 0;
-    }
-    param = num;
-    return 1;
-}
-
-//extern int width, height;
 int gameParamsMenu()
 {
     int state, prevState, action;
-
+    char *statArr[32] = {"OFF", "ON"};
     char widChar[30], heiChar[30], soundChar[10];
     char newArr[5][64], *newA[64];
     char *navArr[64] = {"FIELD WIDTH(30-200)", "FIELD HEIGHT(10-100)", "SOUNDS('W'/'S' TO CHANGE)", "COLOR(2 DIFF HEX DIGITS)"};
     char *valArr[64] = {widChar, heiChar, soundChar, colorBF};
 
     int navLen = 4, xPos, yPos;
-
+    state = 0;
+    prevState = 0;
     int isMenu = 1;
     while (isMenu)
     {
-        state = 0;
-        prevState = 0;
         action = 0;
-        xPos = WID/2-10;
-        yPos = 20;
+        xPos = WID/2-12;
+        yPos = HEI/10 + 16;
 
         itoa(width, widChar, 10);
         itoa(height, heiChar, 10);
-        if (!sounds)
-            strcpy(soundChar, "OFF");
-        else
-            strcpy(soundChar, "ON");
+        strcpy(soundChar, statArr[sounds]);
         for (int i = 0; i < navLen; i++)
         {
             newArr[i][0] = '\0';
@@ -268,9 +394,9 @@ int gameParamsMenu()
         }
 
         system("cls");
-        asciiPr("||options||", 16, 4);
+        asciiPr("||options||", WID/2-34, HEI/10);
         printAt(xPos-4, yPos-2, "GAME PARAMETERS");
-        printNav(xPos, yPos, newA, navLen);
+        printNav(xPos, yPos, newA, navLen, state);
 
         while (!(action = handleNav(state, navLen)))
         {
@@ -323,20 +449,18 @@ int optionsMenu()
 {
     int state, prevState, action;
 
-    char *navArr[64] = {"(SOON) DIFFICULTY SETTINGS", "GAME PARAMETERS", "RESET TO DEFAULTS"};
+    char *navArr[64] = {"DIFFICULTY SETTINGS", "GAME PARAMETERS", "RESET TO DEFAULTS"};
     int navLen = 3, xPos, yPos;
-
+    prevState = state = 0;
     int isMenu = 1;
     while (isMenu)
     {
-        state = 0;
-        prevState = 0;
         action = 0;
         xPos = WID/2-7;
-        yPos = 20;
+        yPos = HEI/10+16;
         system("cls");
-        asciiPr("||options||", 16, 4);
-        printNav(xPos, yPos, navArr, navLen);
+        asciiPr("||options||", WID/2-34, HEI/10);
+        printNav(xPos, yPos, navArr, navLen, state);
         while (!(action = handleNav(state, navLen)))
         {
             moveArrow(state, prevState, xPos-2, yPos);
@@ -347,7 +471,7 @@ int optionsMenu()
         switch(state)
         {
         case 0:
-           // diffSetMenu();
+            diffSetMenu();
             break;
         case 1:
             gameParamsMenu();

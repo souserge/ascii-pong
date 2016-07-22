@@ -12,7 +12,7 @@ void drawScore(int score, int x, int y);
 void printResult(int p1Score, int p2Score);
 void gbMessage();
 void cls();
-void printNav(int x, int y, char *navArr[64], int length);
+void printNav(int x, int y, char *navArr[64], int length, int state);
 void moveArrow(int &state, int &prevState, int x, int y);
 void moveFooter(int startx, int endx, int y, char message[]);
 void drawFooter(int x, int y, int startI, int endI, char message[]);
