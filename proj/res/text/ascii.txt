@@ -56,7 +56,8 @@ _(____/___(___/_(___/_(___/___(___/_(___/_(___ _o_____
 
  Good day to You! Welcome to the ASCII Ball, which is
 a classic-style Ping Pong game made by using only
-text-based graphics! The game is for two players,
+text-based graphics! The game is for two players
+(but you can as well play against your own PC),
 and the winner is whoever scores 7 points first.
 To score a point You need to shoot the ball into
 Your opponent's scoring area by using a platform.
@@ -90,8 +91,8 @@ Player 2 controls are 'O' - UP, 'L' - DOWN.
  At the start of the game, the ball is always in the 
 middle of the board. Initially, it will be heading to 
 Player 1. In the following rounds it will be launched to
-a previous round winner. The ball increases it's speed
-as it stays onthe board. When You score the goal, 
+a previous round winner. The ball increases its speed
+as it stays on the board. When You score the goal, 
 the number on your side of the field increments.
 So, that's about it! Now try it yourself!
 
@@ -214,3 +215,9 @@ add AI;
 add more sound and visual effects;
 publish on GameJolt.
 
+
+// The file is titled ascii.txt, which implies ASCII art,
+// but it contains plain text (two parts of "Help") as well.
+// You might want to rename the file or split it into few
+// different ones :)
+// 		-- nomicos
