@@ -121,36 +121,56 @@ int isScored(Ball b)
         return 0;
 }
 
-void handleAI(Ball b, Platform &p)
+void setAIMode(int mode) {
+    switch (mode) {
+        case 1:
+            aiPlat1 = 0;
+            aiPlat2 = 1;
+            playMode = 1;
+            break;
+        case 2:
+            if (aiFun) {
+                aiPlat1 = 1;
+                aiPlat2 = 1;
+                playMode = 3;
+            }
+            else {
+                aiPlat1 = 0;
+                aiPlat2 = 0;
+                playMode = 2;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void handleAI(Ball b, Platform &p, AI &ai)
 {
     switch (aiType)
     {
     case 0:
-        crazyAI(b, p);
+        crazyAI(b, p, ai);
         break;
     case 1:
-        humanlikeAI(b, p);
+        humanlikeAI(b, p, ai);
         break;
     }
 }
 
-int crazyAI(Ball b, Platform &p)
+int crazyAI(Ball b, Platform &p, AI &ai)
 {
-    if (b.x > fieldX+(2*width)/3)
-    {
+    if (b.dir == ai.side && b.x > p.x - ai.side*(width/3)) {
         if (b.y <= p.y)
             p.mom = UP;
         else if (b.y >= p.y+p.len)
             p.mom = DOWN;
     }
-    else if (b.x > fieldX)
-    {
-        if (p.mom == STAY)
-        {
+    else {
+        if (p.mom == STAY) {
             p.mom = rand()%3 - 1;
         }
-        else if (rand()%60 < 6)
-        {
+        else if (rand()%60 < 6) {
             p.mom *= -1;
         }
     }
@@ -158,36 +178,87 @@ int crazyAI(Ball b, Platform &p)
 }
 
 
-int humanlikeAI(Ball b, Platform &p)
-{
-    static int state = IDLE;
+int humanlikeAI(Ball b, Platform &p, AI &ai) {
 
-    switch(state)
+    switch(ai.state)
     {
     case IDLE:
-        if(b.dir == 1 && b.x >= fieldX+(2*width)/3)
-            state = HIT;
+        if(b.dir == ai.side)// && b.x >= fieldX+(2*width)/3)
+            ai.state = HIT;
         else
             p.mom = STAY;
         break;
     case BACK:
-        if(b.dir == 1 && b.x >= fieldX+(2*width)/3)
-            state = HIT;
+        if(b.dir == ai.side) //&& b.x >= fieldX+(2*width)/3)
+            ai.state = HIT;
         else if (p.y == fieldY + height/2 - p.len/2)
-            state = IDLE;
+            ai.state = IDLE;
         else if (p.y > fieldY + height/2 - p.len/2)
             p.mom = UP;
         else
             p.mom = DOWN;
         break;
     case HIT:
-        if (b.dir == -1)
-            state = BACK;
-        else if (b.y <= p.y)
+        if (!ai.isCalculated) {
+            double ballYD = b.slope*(p.x - ai.side*b.speed)+b.offset;
+
+            if (ballYD < fieldY) {
+                ai.ballY = floor(fabs(ballYD-fieldY));
+                if ((ai.ballY/height)%2 == 1) {
+                    ai.ballY = fiYH - ai.ballY%height;
+                }
+                else {
+                    ai.ballY = fieldY + ai.ballY%height;
+                }
+            }
+            else if (ballYD > fiYH) {
+                ai.ballY = floor(fabs(ballYD-fiYH));
+                if ((ai.ballY/height)%2 == 0) {
+                    ai.ballY = fiYH - ai.ballY%height;
+                }
+                else {
+                    ai.ballY = fieldY + ai.ballY%height;
+                }
+            }
+            else {
+                ai.ballY = round(ballYD);
+            }
+            ai.isCalculated = 1;
+        }
+        if (b.dir == -1*ai.side) {
+            ai.isCalculated = 0;
+            ai.state = BACK;
+        }
+        else if (ai.ballY < p.y + p.len/2) {
             p.mom = UP;
-        else if (b.y >= p.y+p.len)
+        }
+        else if (ai.ballY > p.y + p.len/2) {
             p.mom = DOWN;
+        }
+        else if (fabs(b.x - p.x) <= b.speed) {
+            if (b.y < p.y + (double)p.len/2) {
+                p.mom = UP;
+            }
+            else if (b.y > p.y + (double)p.len/2) {
+                p.mom = DOWN;
+            }
+            else
+                p.mom = rand()%3 - 1;
+        }
+        else {
+            p.mom = STAY;
+        }
         break;
     }
     return 1;
+}
+
+
+AI createAI(int side) {
+    AI ai;
+    ai.state = IDLE;
+    ai.ballY = -1;
+    ai.isCalculated = 0;
+    ai.side = side;
+    return ai;
 }

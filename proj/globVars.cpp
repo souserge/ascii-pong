@@ -27,6 +27,9 @@ int platLen,
     sounds;
 char colorBF[10];
 int playMode,
+    aiPlat1,
+    aiPlat2,
+    aiFun,
     fieldX,
     fieldY,
     fiXW,
@@ -55,7 +58,7 @@ void setFiYH(int a) {fiYH= a;}
 
 void setDefaults()
 {
-    aiType = 1;
+    aiType = 0;
     aiLevel = 1;
     wait = 15;
     ballSpeed = 1;
@@ -68,6 +71,9 @@ void setDefaults()
     strcpy(colorBF, "3B");
 
     playMode = 0;
+    aiPlat1 = 0;
+    aiPlat2 = 0;
+    aiFun = 0;
     fieldX = 3;
     fieldY = 2;
     fiXW = fieldX + width;

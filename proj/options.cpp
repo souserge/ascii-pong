@@ -180,6 +180,13 @@ int changePlatLen(int xPos, int yPos)
     char buffer[128];
     char dec[16] = "0123456789";
     gets(buffer);
+    if (!strcmp(buffer, "AIFUN")){
+        clearRow(xPos, yPos, 40);
+        printAt(xPos, yPos, "HAVE FUN!");
+        getch();
+        aiFun = 1;
+        return 1;
+    }
     if (buffer[0] == '\0' || buffer[0] == '\n')
         return 1;
 
@@ -210,6 +217,7 @@ int changePlatLen(int xPos, int yPos)
         return 0;
     }
     platLen = num;
+    return 1;
 }
 
 int diffSetMenu()

@@ -21,26 +21,28 @@ int keyboard(Platform &plat1, Platform &plat2) {
     while (kbhit()) {
         switch (toupper(getch())) {
         case 'W':
-            plat1.mom = UP;
+            if (aiPlat1 == 0)
+                plat1.mom = UP;
             break;
         case 'S':
-            plat1.mom = DOWN;
+            if (aiPlat1 == 0)
+                plat1.mom = DOWN;
             break;
         case 'O':
-            if (playMode == 2)
+            if (aiPlat2 == 0)
                 plat2.mom = UP;
             break;
         case 'L':
-            if (playMode == 2)
+            if (aiPlat2 == 0)
                 plat2.mom = DOWN;
             break;
         default:
             break;
         }
     }
-    if (!GetAsyncKeyState(0x57) && !GetAsyncKeyState(0x53))
+    if (aiPlat1 == 0 && !GetAsyncKeyState(0x57) && !GetAsyncKeyState(0x53))
         plat1.mom = STAY;
-    if (playMode == 2 && !GetAsyncKeyState(0x4F) && !GetAsyncKeyState(0x4C))
+    if (aiPlat2 == 0 && !GetAsyncKeyState(0x4F) && !GetAsyncKeyState(0x4C))
         plat2.mom = STAY;
     if (GetAsyncKeyState(0x0D) && GetAsyncKeyState(0x1B))
         return 0;

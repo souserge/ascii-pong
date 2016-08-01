@@ -30,11 +30,11 @@
 	"networking.hpp"
 	"globVars.hpp"
 
-1469099409 c:\studies\programming\projects\games\ascii_ballpp\proj\globvars.hpp
+1470061297 c:\studies\programming\projects\games\ascii_ballpp\proj\globvars.hpp
 
 1469093044 c:\studies\programming\projects\games\ascii_ballpp\proj\datacontrol.hpp
 
-1469043055 c:\studies\programming\projects\games\ascii_ballpp\proj\engine.hpp
+1470062123 c:\studies\programming\projects\games\ascii_ballpp\proj\engine.hpp
 	"globVars.hpp"
 
 1469177430 c:\studies\programming\projects\games\ascii_ballpp\proj\graphics.hpp
@@ -43,7 +43,7 @@
 
 1468499094 c:\studies\programming\projects\games\ascii_ballpp\proj\networking.hpp
 
-1469176113 source:c:\studies\programming\projects\games\ascii_ballpp\proj\engine.cpp
+1470063131 source:c:\studies\programming\projects\games\ascii_ballpp\proj\engine.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -62,7 +62,7 @@
 	"networking.hpp"
 	"globVars.hpp"
 
-1469116957 source:c:\studies\programming\projects\games\ascii_ballpp\proj\graphics.cpp
+1469177418 source:c:\studies\programming\projects\games\ascii_ballpp\proj\graphics.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -81,7 +81,7 @@
 	"networking.hpp"
 	"globVars.hpp"
 
-1469117037 source:c:\studies\programming\projects\games\ascii_ballpp\proj\inputhandle.cpp
+1470061181 source:c:\studies\programming\projects\games\ascii_ballpp\proj\inputhandle.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -100,7 +100,7 @@
 	"networking.hpp"
 	"globVars.hpp"
 
-1469117819 source:c:\studies\programming\projects\games\ascii_ballpp\proj\main.cpp
+1470063071 source:c:\studies\programming\projects\games\ascii_ballpp\proj\main.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -132,7 +132,7 @@
 	<ctype.h>
 	<WinSock2.h>
 
-1469171512 source:c:\studies\programming\projects\games\ascii_ballpp\proj\globvars.cpp
+1470061281 source:c:\studies\programming\projects\games\ascii_ballpp\proj\globvars.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -153,7 +153,7 @@
 
 1469171173 c:\studies\programming\projects\games\ascii_ballpp\proj\options.hpp
 
-1469176346 source:c:\studies\programming\projects\games\ascii_ballpp\proj\options.cpp
+1470063498 source:c:\studies\programming\projects\games\ascii_ballpp\proj\options.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -171,4 +171,12 @@
 	"options.hpp"
 	"networking.hpp"
 	"globVars.hpp"
+
+1469945170 source:c:\studies\programming\projects\games\ascii_ballpp\proj\netclient.cpp
+	<WinSock2.h>
+	<stdio.h>
+
+1469945225 source:c:\studies\programming\projects\games\ascii_ballpp\proj\netserver.cpp
+	<WinSock2.h>
+	<stdio.h>
 

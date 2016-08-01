@@ -32,6 +32,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add option="-lws2_32" />
+		</Linker>
 		<Unit filename="dataControl.cpp" />
 		<Unit filename="dataControl.hpp" />
 		<Unit filename="engine.cpp" />
@@ -43,6 +46,8 @@
 		<Unit filename="inputHandle.cpp" />
 		<Unit filename="inputHandle.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="netClient.cpp" />
+		<Unit filename="netServer.cpp" />
 		<Unit filename="networking.cpp" />
 		<Unit filename="networking.hpp" />
 		<Unit filename="options.cpp" />

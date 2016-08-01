@@ -28,9 +28,16 @@ typedef struct Platform {
     int mom;
 } Platform;
 
+typedef struct AI {
+    int state;
+    int ballY;
+    int isCalculated;
+    int side;
+} AI;
+
 extern int aiLevel, aiType, wait; extern double ballSpeed; extern int platLen, scoreLimit;
 extern int width, height, sounds; extern char colorBF[10];
-extern int playMode, fieldX, fiXW, fieldY, fiYH, WID, HEI;
+extern int playMode, aiPlat1, aiPlat2, aiFun, fieldX, fiXW, fieldY, fiYH, WID, HEI;
 
 void setAIType(int a);
 void setAILevel(int a);

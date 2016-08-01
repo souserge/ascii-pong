@@ -27,6 +27,16 @@ int mainGameLoop()
     int p1Score = 0;
     int p2Score = 0;
     int isRunning = 1;
+    AI ai1;
+    AI ai2;
+
+    if (aiPlat1) {
+        ai1 = createAI(-1);
+    }
+    if (aiPlat2) {
+        ai2 = createAI(1);
+    }
+
     while (isRunning)
     {
         fflush(stdin);
@@ -47,6 +57,10 @@ int mainGameLoop()
         if (p1Score >= scoreLimit)
         {
             isRunning = 0;
+            if (aiPlat1 == 1)
+            {
+              asciiPr("||comWin||", WID/2 - 41, HEI/2 - 3);
+            }
             asciiPr("||p1Win||", WID/2 - 37, HEI/2 - 3);
             Sleep(2000);
             fflush(stdin);
@@ -56,7 +70,7 @@ int mainGameLoop()
         else if (p2Score >= scoreLimit)
         {
             isRunning = 0;
-            if (playMode == 1)
+            if (aiPlat2 == 1)
             {
               asciiPr("||comWin||", WID/2 - 41, HEI/2 - 3);
             }
@@ -85,8 +99,11 @@ int mainGameLoop()
                 }
                 else
                 {
-                    if (playMode == 1) {
-                        handleAI(b, plat2);
+                    if (aiPlat2) {
+                        handleAI(b, plat2, ai2);
+                    }
+                    if (aiPlat1) {
+                        handleAI(b, plat1, ai1);
                     }
                     if (!keyboard(plat1, plat2))
                         return 0;
@@ -117,10 +134,10 @@ int main(int argc, char *argv[])
             isGame = 0;
             return 0;
         case 1:
-            playMode = 1;
+            setAIMode(1);
             break;
         case 2:
-            playMode = 2;
+            setAIMode(2);
             break;
         }
         stopWav();
