@@ -8,7 +8,7 @@
 ---
 
 *My resources*:
-- ASCII fonts: [Text to ASCII Generator]{patorjk.com/software/taag/}
+- ASCII fonts: [Text to ASCII Generator](patorjk.com/software/taag/)
 - Sounds: created using Bfxr
 - Music: taken (stolen) from the demo songs of Famitracker - Class Kulor - SpaceDolphinsSpaceCave  
 
