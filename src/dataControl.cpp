@@ -109,21 +109,92 @@ int isInArray(char c, char *arr, int length)
     return 0;
 }
 
-//int changeInt(int low, int high, int &param)
-//{
-//    char numChar[50];
-//    gets(numChar);
-//    if (numChar[0] == '\0' || numChar[0] == '\n')
-//        return -1;
-//    int num = atoi(numChar);
-//
-//    if(num >= low && num <= high)
-//    {
-//        param = num;
-//        return 1;
-//    }
-//    return 0;
-//}
+
+
+int readSettings() {
+    char buffer[1000], value[100];
+    int i = 0;
+    FILE *settings = fopen("options.txt", "r");
+    if (settings == NULL) {
+        fclose(settings);
+        return 0;
+    }
+    while (fgets(buffer, sizeof(buffer), settings) != NULL && i < NUM_OF_PARAMS) {
+        sscanf(buffer, "%*s %s", value);
+        if(!takeSettings(value, i)) {
+            fclose(settings);
+            return 0;
+        }
+        i++;
+    }
+    fclose(settings);
+    if (i != NUM_OF_PARAMS)
+        return 0;
+    return 1;
+}
+
+
+int takeSettings(char *value, int index) {
+    int counter = 0, intValues = 8, doubleValues = 1, charArrValues = 1;
+    int *intValuesArr[] = {&aiLevel, &aiType, &wait, &platLen, &scoreLimit, &width, &height, &sounds};
+    double *doubleValuesArr[] = {&ballSpeed};
+    char *charArrValuesArr[] = {colorBF};
+
+    if (index < (counter + intValues)) {
+        *intValuesArr[index] = atoi(value);
+    }
+    else if (index < (counter += intValues) + doubleValues) {
+        *doubleValuesArr[index-counter] = atof(value);
+    }
+    else if (index < (counter += doubleValues) + charArrValues) {
+        strcpy(charArrValuesArr[index-counter], value);
+    }
+    else
+        return 0;
+    return 1;
+}
+
+int writeSettings() {
+    char names[][50] = {"AI_TYPE", "AI_LEVEL", "GAME_SPEED", "PADDLE_LENGTH", "SCORE_LIMIT",
+                        "FIELD_WIDTH", "FIELD_HEIGHT", "SOUNDS", "BALL_SPEED", "COLOR_BF"};
+    char buffer[1000], values[100], temp[1000];
+    int i = 0;
+    FILE *settings = fopen("options.txt", "w+");
+    if (settings == NULL) {
+        fclose(settings);
+        return 0;
+    }
+    for (i = 0; i < NUM_OF_PARAMS; i++) {
+        if (!storeSettings(temp, i)) {
+            fclose(settings);
+            return 0;
+        }
+        sprintf(buffer, "%s: %s\n", names[i], temp);
+        fputs(buffer, settings);
+    }
+    fclose(settings);
+    return 1;
+}
+
+int storeSettings(char *buffer, int index) {
+    int counter = 0, i, intValues = 8, doubleValues = 1, charArrValues = 1;
+    int *intValuesArr[] = {&aiLevel, &aiType, &wait, &platLen, &scoreLimit, &width, &height, &sounds};
+    double *doubleValuesArr[] = {&ballSpeed};
+    char *charArrValuesArr[] = {colorBF};
+
+    if (index < (intValues)) {
+        itoa(*intValuesArr[index], buffer, 10);
+    }
+    else if (index < ((counter += intValues) + doubleValues)) {
+        sprintf(buffer, "%lf", *doubleValuesArr[index-counter]);
+    }
+    else if (index < ((counter += doubleValues) + charArrValues)) {
+        strcpy(buffer, charArrValuesArr[index-counter]);
+    }
+    else
+        return 0;
+    return 1;
+}
 
 void combineArrs(char *arr1[], char *arr2[], int len)
 {

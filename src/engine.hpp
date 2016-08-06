@@ -6,6 +6,7 @@ int getY(Ball ball);
 Ball genInitPos(int dir);
 Platform initPlat(int x);
 void handleBallMove(Ball &b, Platform &plat1, Platform &plat2, int &counter);
+int randomChance(int level, int maximum);
 void updateBallPos(Ball &b, int &oldX, int &oldY);
 int isScored(Ball b);
 void setAIMode(int mode);

@@ -204,16 +204,12 @@ So, that's about it! Now try it yourself!
    /_/
 |stop|
 
-
 TODO:
-sounds
-make a release on github;
-refractor the ball logics;
-change the physics handling;
-keyboard layout independency;
-add AI;
-add more sound and visual effects;
-publish on GameJolt.
+	keypresses buffer issue;
+	keyboard layout independency;
+	less frustrating AI;
+	networking;
+	effects.
 
 
 // The file is titled ascii.txt, which implies ASCII art,
@@ -221,3 +217,12 @@ publish on GameJolt.
 // You might want to rename the file or split it into few
 // different ones :)
 // 		-- nomicos
+
+// The file is name as such because it contains ASCII characters.
+// Moreover, the code is also chaotic, therefore the project has
+// consistency and consistency is the most important thing
+// in programming. ^_^
+// P.S. And I keep a TODO list in here! *rebellious smirk*
+//		-- qw8 
+
+

@@ -144,7 +144,7 @@ int changeAILevel(int xPos, int yPos)
 {
     char *statArr[32] = {"EASY", "MEDIUM", "HARD"};
     int state;
-    if (state = changeState(xPos, yPos, aiLevel, statArr, 3) != -1)
+    if ((state = changeState(xPos, yPos, aiLevel, statArr, 3)) != -1)
         aiLevel = state;
     return 1;
 }
@@ -457,8 +457,8 @@ int optionsMenu()
 {
     int state, prevState, action;
 
-    char *navArr[64] = {"DIFFICULTY SETTINGS", "GAME PARAMETERS", "RESET TO DEFAULTS"};
-    int navLen = 3, xPos, yPos;
+    char *navArr[64] = {"DIFFICULTY SETTINGS", "GAME PARAMETERS", "SAVE SETTINGS", "RESET TO DEFAULTS"};
+    int navLen = 4, xPos, yPos;
     prevState = state = 0;
     int isMenu = 1;
     while (isMenu)
@@ -485,6 +485,10 @@ int optionsMenu()
             gameParamsMenu();
             break;
         case 2:
+            writeSettings();
+            updateAll();
+            break;
+        case 3:
             setDefaults();
             updateAll();
             break;

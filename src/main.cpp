@@ -61,7 +61,8 @@ int mainGameLoop()
             {
               asciiPr("||comWin||", WID/2 - 41, HEI/2 - 3);
             }
-            asciiPr("||p1Win||", WID/2 - 37, HEI/2 - 3);
+            else
+                asciiPr("||p1Win||", WID/2 - 37, HEI/2 - 3);
             Sleep(2000);
             fflush(stdin);
             printAt((WID-30), (HEI-3), "<Press ENTER to continue>");
@@ -122,7 +123,12 @@ int mainGameLoop()
 
 int main(int argc, char *argv[])
 {
-    setDefaults();
+    if (!readSettings()) {
+        setDefaults();
+        writeSettings();
+    }
+    updateAll();
+
     initConsole();
     int isGame = 1;
     while (isGame)

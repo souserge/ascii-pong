@@ -7,6 +7,7 @@
 #define MINY 2
 #define DEF_WID 104
 #define DEF_HEI 42
+#define NUM_OF_PARAMS 10
 
 enum {UP = -1, STAY = 0, DOWN = 1};
 enum {IDLE, BACK, HIT};
@@ -29,6 +30,7 @@ typedef struct Platform {
 } Platform;
 
 typedef struct AI {
+    int mistake;
     int state;
     int ballY;
     int isCalculated;

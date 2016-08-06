@@ -19,13 +19,14 @@
 int aiType,
     aiLevel,
     wait;
-double ballSpeed;
 int platLen,
     scoreLimit,
     width,
     height,
     sounds;
+double ballSpeed;
 char colorBF[10];
+
 int playMode,
     aiPlat1,
     aiPlat2,
