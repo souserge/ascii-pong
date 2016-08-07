@@ -1,4 +1,4 @@
-﻿# ASCII Pong
+﻿# ASCII PONG
 ## A small pong-style game for one or two players.  
 
 **Platform**: Windows. Runs in cmd.  
