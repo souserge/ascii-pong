@@ -13,6 +13,7 @@ int takeSettings(char *value, int index);
 int writeSettings();
 int storeSettings(char *buffer, int index);
 void combineArrs(char *arr1[], char *arr2[], int len);
-void initConsole(void);
+void closeConsole(void);
+void clearBuffer(void);
 
 #endif // DATACONTROL_HPP_INCLUDED

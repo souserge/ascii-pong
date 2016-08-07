@@ -188,6 +188,7 @@ int storeSettings(char *buffer, int index) {
     else if (index < ((counter += intValues) + doubleValues)) {
         sprintf(buffer, "%lf", *doubleValuesArr[index-counter]);
     }
+
     else if (index < ((counter += doubleValues) + charArrValues)) {
         strcpy(buffer, charArrValuesArr[index-counter]);
     }
@@ -204,13 +205,16 @@ void combineArrs(char *arr1[], char *arr2[], int len)
         strcat(arr1[i], arr2[i]);
     }
 }
-void initConsole()
-{
-    system("TITLE ASCII PONG");
 
-    char mode[128], color[128];
-    sprintf(mode, "MODE CON: COLS=%d LINES=%d", WID, HEI);
-    sprintf(color, "COLOR %s", colorBF);
-    system(mode);
-    system(color);
+void closeConsole(void) {
+    system("CLS");
+    system("TITLE THANKS FOR PLAYING!");
+    system("MODE CON: COLS=87 LINES=32");
+    system("COLOR 0A");
+}
+
+void clearBuffer() {
+    while(kbhit()) {
+        getch();
+    }
 }

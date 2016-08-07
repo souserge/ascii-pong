@@ -64,7 +64,7 @@ int mainGameLoop()
             else
                 asciiPr("||p1Win||", WID/2 - 37, HEI/2 - 3);
             Sleep(2000);
-            fflush(stdin);
+            clearBuffer();
             printAt((WID-30), (HEI-3), "<Press ENTER to continue>");
             while (handleNav(state, 0) != 1);
         }
@@ -78,7 +78,7 @@ int mainGameLoop()
             else
                 asciiPr("||p2Win||", WID/2 - 39, HEI/2 - 3);
             Sleep(2000);
-            fflush(stdin);
+            clearBuffer();
             printAt((WID-30), (HEI-3), "<Press ENTER to continue>");
             while (handleNav(state, 0) != 1);
         }
@@ -123,14 +123,15 @@ int mainGameLoop()
 
 int main(int argc, char *argv[])
 {
+    system("TITLE ASCII PONG");
     if (!readSettings()) {
         setDefaults();
         writeSettings();
     }
     updateAll();
 
-    initConsole();
     int isGame = 1;
+    int isPlay = 0;
     while (isGame)
     {
         playWav("music.wav", 1);
@@ -138,16 +139,23 @@ int main(int argc, char *argv[])
         case 0:
             gbMessage();
             isGame = 0;
-            return 0;
+            isPlay = 0;
+            break;
         case 1:
             setAIMode(1);
+            isPlay = 1;
             break;
         case 2:
             setAIMode(2);
+            isPlay = 1;
             break;
         }
-        stopWav();
-        mainGameLoop();
+        if (isPlay) {
+            stopWav();
+            mainGameLoop();
+        }
     }
+
+    closeConsole();
     return 0;
 }

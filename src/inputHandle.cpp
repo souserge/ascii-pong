@@ -18,28 +18,16 @@
 
 int keyboard(Platform &plat1, Platform &plat2) {
     GetAsyncKeyState(0x0D); GetAsyncKeyState(0x1B);
-    while (kbhit()) {
-        switch (toupper(getch())) {
-        case 'W':
-            if (aiPlat1 == 0)
-                plat1.mom = UP;
-            break;
-        case 'S':
-            if (aiPlat1 == 0)
-                plat1.mom = DOWN;
-            break;
-        case 'O':
-            if (aiPlat2 == 0)
-                plat2.mom = UP;
-            break;
-        case 'L':
-            if (aiPlat2 == 0)
-                plat2.mom = DOWN;
-            break;
-        default:
-            break;
-        }
-    }
+
+    if (aiPlat1 == 0 && GetAsyncKeyState(0x57))
+        plat1.mom = UP;
+    if (aiPlat1 == 0 && GetAsyncKeyState(0x53))
+        plat1.mom = DOWN;
+    if (aiPlat2 == 0 && GetAsyncKeyState(0x4F))
+        plat2.mom = UP;
+    if (aiPlat2 == 0 && GetAsyncKeyState(0x4C))
+        plat2.mom = DOWN;
+
     if (aiPlat1 == 0 && !GetAsyncKeyState(0x57) && !GetAsyncKeyState(0x53))
         plat1.mom = STAY;
     if (aiPlat2 == 0 && !GetAsyncKeyState(0x4F) && !GetAsyncKeyState(0x4C))
@@ -71,27 +59,33 @@ void handleInput(Platform &plat1, Platform &plat2)
 
 int handleNav(int &state, int noOfStates)
 {
-    fflush(stdin);
-    while (kbhit()) {
-            switch (toupper(getch())) {
-            case 27:
-                return -1;
-            case 'W':
-                if(state > 0)
-                    state--;
-                break;
-            case 'S':
-                if(state < noOfStates-1)
-                    state++;
-                break;
-            case '\r': case '\n':
-                return 1;
-                break;
-            default:
-                break;
-            }
-        }
-        return 0;
+static int esc = 0, enter = 0, w = 0, s = 0;
+static int prevEsc = 0, prevEnter = 0, prevW = 0, prevS = 0;
+
+    if ((esc = GetAsyncKeyState(0x1B)) && !prevEsc) {
+        prevEsc = esc;
+        return -1;
+    }
+    else
+        prevEsc = esc;
+    if ((enter = GetAsyncKeyState(0x0D)) && !prevEnter) {
+        prevEnter = enter;
+        return 1;
+    }
+    else prevEnter = enter;
+    if  ((w = GetAsyncKeyState(0x57)) && !prevW && state > 0) {
+        prevW = w;
+        state--;
+    }
+    else
+        prevW = w;
+    if ((s = GetAsyncKeyState(0x53)) && !prevS && state < noOfStates-1) {
+        prevS = s;
+        state++;
+    }
+    else
+        prevS = s;
+    return 0;
 }
 
 int mainMenu()
@@ -101,7 +95,7 @@ int mainMenu()
     char *navArr[64] = {"1 PLAYER", "2 PLAYERS", "HELP", "OPTIONS", "QUIT"};
     int navLen = 5, xPos, yPos;
 
-    char message[] = "NOTE: use 'W'/'S' to navigate; ENTER to select        Make sure you have an English keyboard layout!";
+    char message[] = "NOTE: use 'W'/'S' to navigate; ENTER to select        Don't forget to check out the OPTIONS menu!";
     state = 0;
     prevState = 0;
     int isMenu = 1;
@@ -118,7 +112,7 @@ int mainMenu()
         {
             moveArrow(state, prevState, xPos-2, yPos);
             moveFooter(2, WID-2, HEI - 2, message);
-            Sleep(40);
+            Sleep(MENU_WAIT);
         }
         switch (state)
         {

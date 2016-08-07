@@ -107,7 +107,7 @@ void gbMessage()
     system("cls");
     asciiPr("||goodbye||", ((WID+1)/2-26), HEI/3);
     Sleep(1000);
-    fflush(stdin);
+    clearBuffer();
     printAt((WID-20), (HEI-4), "<Press any key>");
     getch();
 }
@@ -140,7 +140,7 @@ void moveFooter(int startx, int endx, int y, char *message)
     static int counter = 0;
     int len = strlen(message);
     int startI, endI, x;
-
+    //int startTailI, endTailI, tailX; TODO
 
     if (counter > (endx - startx)) {
         x = startx;
@@ -183,7 +183,7 @@ int helpMenu()
         action = 0;
         system("cls");
         asciiPr("||help||", (WID/2-20), HEI/10);
-        asciiPr("||helpMsg1||", (WID/2-28), HEI/10+16);
+        asciiPr("||helpMsg1||", (WID/2-28), HEI/10+12);
         while ((action = handleNav(state, 0)) == 0);
         switch (action)
         {
@@ -196,7 +196,7 @@ int helpMenu()
         }
         system("cls");
         asciiPr("||help||", (WID/2-20), HEI/10);
-        asciiPr("||helpMsg2||", (WID/2-28), HEI/10+16);
+        asciiPr("||helpMsg2||", (WID/2-28), HEI/10+12);
 
         while (!(action = handleNav(state, 0)));
         switch (action)

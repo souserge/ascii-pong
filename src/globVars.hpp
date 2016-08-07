@@ -8,7 +8,7 @@
 #define DEF_WID 104
 #define DEF_HEI 42
 #define NUM_OF_PARAMS 10
-
+#define MENU_WAIT 35
 enum {UP = -1, STAY = 0, DOWN = 1};
 enum {IDLE, BACK, HIT};
 enum {OFF, ON};

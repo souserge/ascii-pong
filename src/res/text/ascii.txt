@@ -54,18 +54,18 @@ _(____/___(___/_(___/_(___/___(___/_(___/_(___ _o_____
 ||helpMsg1||
 <Press ESC to go back>
 
- Good day to You! Welcome to the ASCII Ball, which is
-a classic-style Ping Pong game made by using only
-text-based graphics! The game is for two players
-(but you can as well play against your own PC),
+ Good day to You! Welcome to the ASCII PONG,
+which is a classic-style Pong game made using 
+only text-based graphics! The game is for
+two players (but you can as well play against PC),
 and the winner is whoever scores 7 points first.
 To score a point You need to shoot the ball into
-Your opponent's scoring area by using a platform.
-The scoring areas are behind each of the platforms.
-To defend Your area, bounce the ball off Your platform.
+Your opponent's scoring area by using a paddle.
+The scoring areas are behind each of the paddles.
+To defend Your area, bounce the ball off Your paddle.
 To change the slope of the ball, hit the ball 
-while moving the platform upwards or downwards.
-Player 1 controls his platform(on the left)
+while moving the paddle upwards or downwards.
+Player 1 controls his paddle (on the left)
 by pressing 'W' to go UP, and 'S' to go DOWN;
 Player 2 controls are 'O' - UP, 'L' - DOWN.
 
@@ -82,14 +82,14 @@ Player 2 controls are 'O' - UP, 'L' - DOWN.
         |              _|_    score
         |X                   
         |X                   
-        |X <-- platform
+        |X <-- paddle
         |X
         |X                O <-- ball
         |
         o-----------------------------
 		
  At the start of the game, the ball is always in the 
-middle of the board. Initially, it will be heading to 
+middle of the field. Initially, it will be heading to 
 Player 1. In the following rounds it will be launched to
 a previous round winner. The ball increases its speed
 as it stays on the board. When You score the goal, 
@@ -204,9 +204,11 @@ So, that's about it! Now try it yourself!
    /_/
 |stop|
 
+
 TODO:
-	keypresses buffer issue;
-	keyboard layout independency;
+	---update help menu;
+	---keypresses buffer issue;
+	---keyboard layout independency;
 	less frustrating AI;
 	networking;
 	effects.
@@ -221,8 +223,6 @@ TODO:
 // The file is name as such because it contains ASCII characters.
 // Moreover, the code is also chaotic, therefore the project has
 // consistency and consistency is the most important thing
-// in programming. ^_^
+// in programming ^_^
 // P.S. And I keep a TODO list in here! *rebellious smirk*
 //		-- qw8 
-
-

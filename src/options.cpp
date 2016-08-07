@@ -34,11 +34,11 @@ void updateField()
     {
         HEI = height+5;
     }
-    if (width < DEF_WID-7)
+    if (width <= DEF_WID-7)
     {
         WID = DEF_WID;
     }
-    if (height < DEF_HEI-5)
+    if (height <= DEF_HEI-5)
     {
         HEI = DEF_HEI;
     }
@@ -79,6 +79,7 @@ int changeInt(int xPos, int yPos, int low, int high, int &param)
     int num;
     char buffer[128];
     char dec[16] = "0123456789";
+    clearBuffer();
     gets(buffer);
     if (buffer[0] == '\0' || buffer[0] == '\n')
         return 2;
@@ -179,6 +180,7 @@ int changePlatLen(int xPos, int yPos)
     int high = height - 4;
     char buffer[128];
     char dec[16] = "0123456789";
+    clearBuffer();
     gets(buffer);
     if (!strcmp(buffer, "AIFUN")){
         clearRow(xPos, yPos, 40);
@@ -264,7 +266,7 @@ int diffSetMenu()
 
         system("cls");
         asciiPr("||options||", WID/2-34, HEI/10);
-        printAt(xPos-4, yPos-2, "DIFFICULTY SETTINGS:");
+        printAt(xPos-4, yPos-2, "DIFFICULTY SETTINGS");
         printNav(xPos, yPos, newA, navLen, state);
         while (!(action = handleNav(state, navLen)))
         {
@@ -343,6 +345,7 @@ int checkColor(char *color)
 int changeColor(int xPos, int yPos)
 {
     char colorChar[10];
+    clearBuffer();
     gets(colorChar);
     for (int i = 0; i < strlen(colorChar); i++)
     {
@@ -386,7 +389,7 @@ int gameParamsMenu()
     while (isMenu)
     {
         action = 0;
-        xPos = WID/2-12;
+        xPos = WID/2-7;
         yPos = HEI/10 + 16;
 
         itoa(width, widChar, 10);

@@ -2,7 +2,7 @@
 ## A small pong-style game for one or two players.  
 
 **Platform**: Windows. Runs in cmd.  
-**How to run**: bin/"ASCII Pong.exe".  
+**How to run a binary**: check out the latest release! The binary is in bin/"ASCII Pong.exe".  
 **How to compile**: makefile is included in /src folder.  
 
 ---
