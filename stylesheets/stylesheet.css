@@ -75,6 +75,10 @@ h1, h2, h3, h4, h5, h6 {
   color: #00ffff;
 }
 
+h2 {
+    font-size: 22px;
+}
+
 #main_content h1 {
   font-size: 30px;
 }
@@ -177,7 +181,7 @@ ul li:before {
     margin: 10px auto;
 }
 
-@media screen and (max-width: 760px) {
+@media handheld, screen and (max-width: 760px) {
     .title {
         display: none;
     }
