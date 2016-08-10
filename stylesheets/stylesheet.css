@@ -181,7 +181,7 @@ ul li:before {
     margin: 10px auto;
 }
 
-@media handheld, screen and (max-width: 760px) {
+@media handheld, screen and (max-device-width: 1024px), screen and (max-width: 760px) {
     .title {
         display: none;
     }
@@ -202,8 +202,5 @@ ul li:before {
         white-space:pre;
         line-height: 0.5;
         color: #00ffff;
-    }
-    body {
-        background-color: red;
     }
 }
