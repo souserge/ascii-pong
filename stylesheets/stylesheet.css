@@ -203,4 +203,7 @@ ul li:before {
         line-height: 0.5;
         color: #00ffff;
     }
+    body {
+        background-color: red;
+    }
 }
