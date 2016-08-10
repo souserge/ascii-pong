@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   background-color: #008080;
   color: #00ffff;
@@ -15,9 +15,12 @@ body {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
+header {
+    margin: 0 auto;
+}
 
 article {
     text-transform: none;
@@ -50,13 +53,17 @@ li {
 .title {
     padding: 0;
     border: 0;
-    margin: 60px 0 20px 0;
+    margin: 60px 0 15px 0;
     text-align: center;
     font-size: 14px;
-    font-family: monospace;
+    font-family: "Lucida Console", Terminal, monospace;
     white-space:pre;
     line-height: 0.5;
     color: #00ffff;
+}
+
+.title_s {
+    display: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -64,7 +71,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
   font-weight: normal;
   width: 70%;
-  font-family: monospace;
+  font-family: "Lucida Console", Terminal, monospace;
   color: #00ffff;
 }
 
@@ -99,7 +106,7 @@ ul {
 }
 
 ul li:before {
-  font-family: monospace;
+  font-family: "Lucida Console", Terminal, monospace;
   font-size: 13px;
   color: #00ffff;
   line-height: 16px;
@@ -107,21 +114,25 @@ ul li:before {
 
 #nav {
     margin: 40px auto 0 auto;
-    transform: translateX(160px);
+    width: 60%;
+    margin-left: 40%;
     max-width: 500px;
 }
 
 #downloads {
     margin: 40px auto 0 auto;
-    transform: translateX(100px);
+    width: 71%;
+    margin-left: 29%;
     max-width: 500px;
 }
 
 .btn {
-  padding: 8px 18px;
-  margin-right: 30px;
+    width: 90%;
+    padding: 0;
+    margin: 0;
+    padding-top: 1em;
   color: #00ffff;
-  font-family: monospace;
+  font-family: "Lucida Console", Terminal, monospace;
   font-size: 16px;
   display: block;
   text-decoration: none;
@@ -149,17 +160,43 @@ ul li:before {
 }
 
 .marquee {
-    margin: 100px auto 0 auto;
+    margin: 0 auto;
+    margin-top: 6em;
     text-transform: none;
+    width: 100%;
 }
 
 #main_content {
   padding-top: 10px;
-  width: 89%;
+  width: 93%;
   margin: 0 auto;
 }
 
 .info {
     width: 78%;
     margin: 10px auto;
+}
+
+@media screen and (max-width: 760px) {
+    .title {
+        display: none;
+    }
+    .title_s {
+        width: 90%;
+        display: block;
+        margin: 60px auto 15px auto;
+        text-align: center;
+    }
+    p.title_s {
+        display: inline-flex;
+        padding: 0;
+        border: 0;
+        width: auto;
+        margin: 0 auto;
+        font-size: 14px;
+        font-family: "Lucida Console", Terminal, monospace;
+        white-space:pre;
+        line-height: 0.5;
+        color: #00ffff;
+    }
 }
