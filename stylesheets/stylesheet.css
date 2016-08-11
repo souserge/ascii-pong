@@ -53,7 +53,7 @@ li {
 .title {
     padding: 0;
     border: 0;
-    margin: 60px 0 15px 0;
+    margin: 8% 0 15px 0;
     text-align: center;
     font-size: 14px;
     font-family: "Lucida Console", Terminal, monospace;
@@ -116,36 +116,41 @@ ul li:before {
   line-height: 16px;
 }
 
-#nav {
-    margin: 40px auto 0 auto;
-    width: 60%;
-    margin-left: 50%;
-    max-width: 500px;
+.navigation {
+    margin: 15px auto 0 auto;
+    display: table;
+    list-style: none;
+    table-layout: fixed;
+    max-width: 90%;
 }
 
-#downloads {
-    margin: 40px auto 0 auto;
-    width: 71%;
-    margin-left: 29%;
-    max-width: 500px;
+.navigation li{
+    margin: 0;
+    padding: 0;
 }
 
 .btn {
-    width: 90%;
     padding: 0;
     margin: 0;
     padding-top: 1em;
-  color: #00ffff;
-  font-family: "Lucida Console", Terminal, monospace;
-  font-size: 16px;
-  display: block;
-  text-decoration: none;
-  text-align: left;
+    color: #00ffff;
+    font-family: "Lucida Console", Terminal, monospace;
+    font-size: 16px;
+    display: block;
+    width: auto;
+    text-decoration: none;
+    text-align: left;
+}
+
+.btn:before {
+    white-space:pre;
+    content: "  ";
 }
 
 .btn:hover {
-    transform: translateX(-16px);
+    transform: translateX(4px);
 }
+
 
 .btn:hover:before {
   content: "> ";
@@ -158,6 +163,9 @@ ul li:before {
 .nav:hover {
     transform:translateX(4px);
 }
+.nav:before {
+    content: none;
+}
 
 .nav:hover:before {
     content: none;
@@ -165,7 +173,7 @@ ul li:before {
 
 .marquee {
     margin: 0 auto;
-    margin-top: 6em;
+    margin-top: 20%;
     text-transform: none;
     width: 100%;
 }
@@ -186,9 +194,9 @@ ul li:before {
         display: none;
     }
     .title_s {
-        width: 90%;
+        width: 100%;
         display: block;
-        margin: 60px auto 15px auto;
+        margin: 8% auto 15px auto;
         text-align: center;
     }
     p.title_s {
